@@ -75,9 +75,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
       window.localStorage.setItem('emailForSignIn', email);
       toast({ title: 'Check your email', description: `A sign-in link has been sent to ${email}.` });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Send sign in link error', error);
-      toast({ title: 'Error', description: 'Could not send sign-in link. Please try again.', variant: 'destructive' });
+      if (error.code === 'auth/invalid-api-key' || (error.message && error.message.includes('api-key-not-valid'))) {
+        toast({
+          variant: 'destructive',
+          title: 'Firebase Configuration Error',
+          description: 'The Firebase API key is not valid. Please check your .env.local file and restart the development server.',
+          duration: 10000,
+        });
+      } else {
+        toast({ title: 'Error', description: 'Could not send sign-in link. Please try again.', variant: 'destructive' });
+      }
     }
   };
 
