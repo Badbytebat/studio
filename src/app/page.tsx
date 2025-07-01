@@ -9,6 +9,7 @@ import { useAuth } from '@/context/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { uploadFile } from '@/lib/storage';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import LoginScreen from '@/components/login-screen';
 import Header from '@/components/layout/header';
@@ -206,7 +207,7 @@ export default function HomePage() {
   const handleViewerMode = () => {
     setBatAnimation(true);
     document.documentElement.classList.add('viewer-mode-active');
-    setTimeout(() => setShowLogin(false), 1200); 
+    setShowLogin(false);
   };
   
   const handleLogout = async () => {
@@ -237,99 +238,108 @@ export default function HomePage() {
     );
   }
 
-  if (showLogin && !user) {
-    return (
-      <LoginScreen
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        handleSignIn={handleSignIn}
-        handleViewerMode={handleViewerMode}
-        batAnimation={batAnimation}
-        isFirebaseConfigured={isFirebaseConfigured}
-      />
-    );
-  }
-
   const educationItems = data.qualifications?.filter(q => q.type === 'education') || [];
   const certificationItems = data.qualifications?.filter(q => q.type === 'certification') || [];
   
   return (
-    <>
-      {!editMode && <MatrixCursor />}
-      <Header 
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        scrollToSection={scrollToSection}
-        headerData={data.header}
-        editMode={editMode}
-        onUpdate={handleHeaderUpdate}
-      />
-      
-      {editMode && (
-        <div className="fixed bottom-4 right-4 z-50">
-          <Button onClick={handleLogout}>Logout &amp; Exit Edit Mode</Button>
-        </div>
-      )}
+    <AnimatePresence mode="wait">
+      {(showLogin && !user) ? (
+        <motion.div
+          key="login"
+          exit={{ opacity: 0, transition: { duration: 0.8, ease: 'easeInOut' } }}
+        >
+          <LoginScreen
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            handleSignIn={handleSignIn}
+            handleViewerMode={handleViewerMode}
+            batAnimation={batAnimation}
+            isFirebaseConfigured={isFirebaseConfigured}
+          />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="portfolio"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeInOut' } }}
+        >
+          {!editMode && <MatrixCursor />}
+          <Header 
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            scrollToSection={scrollToSection}
+            headerData={data.header}
+            editMode={editMode}
+            onUpdate={handleHeaderUpdate}
+          />
+          
+          {editMode && (
+            <div className="fixed bottom-4 right-4 z-50">
+              <Button onClick={handleLogout}>Logout &amp; Exit Edit Mode</Button>
+            </div>
+          )}
 
-      <main className="flex min-h-screen flex-col bg-background">
-        <HeroSection scrollToSection={scrollToSection} />
-        <AboutSection 
-          data={data.about}
-          editMode={editMode}
-          onUpdate={handleAboutUpdate}
-        />
-        <ExperienceSection 
-            data={data.experience} 
-            editMode={editMode} 
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-        <SkillsSection 
-            data={data.skills} 
-            editMode={editMode}
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-        <ProjectsSection 
-            data={data.projects} 
-            editMode={editMode} 
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-        <EducationSection 
-            data={educationItems} 
-            editMode={editMode} 
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-        <CertificationsSection 
-            data={certificationItems} 
-            editMode={editMode} 
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-        <ResumeSection 
-            resumeUrl={data.resumeUrl}
-            editMode={editMode}
-            onUpload={handleResumeUpload}
-            isUploading={isResumeUploading}
-        />
-        <ContactSection
-            data={data.contact}
-            editMode={editMode}
-            updateEntry={handleUpdate as any}
-            addEntry={handleAdd as any}
-            deleteEntry={handleDelete as any}
-        />
-      </main>
-      <Footer />
-    </>
+          <main className="flex min-h-screen flex-col bg-background">
+            <HeroSection scrollToSection={scrollToSection} />
+            <AboutSection 
+              data={data.about}
+              editMode={editMode}
+              onUpdate={handleAboutUpdate}
+            />
+            <ExperienceSection 
+                data={data.experience} 
+                editMode={editMode} 
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+            <SkillsSection 
+                data={data.skills} 
+                editMode={editMode}
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+            <ProjectsSection 
+                data={data.projects} 
+                editMode={editMode} 
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+            <EducationSection 
+                data={educationItems} 
+                editMode={editMode} 
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+            <CertificationsSection 
+                data={certificationItems} 
+                editMode={editMode} 
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+            <ResumeSection 
+                resumeUrl={data.resumeUrl}
+                editMode={editMode}
+                onUpload={handleResumeUpload}
+                isUploading={isResumeUploading}
+            />
+            <ContactSection
+                data={data.contact}
+                editMode={editMode}
+                updateEntry={handleUpdate as any}
+                addEntry={handleAdd as any}
+                deleteEntry={handleDelete as any}
+            />
+          </main>
+          <Footer />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

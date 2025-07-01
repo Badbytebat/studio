@@ -45,7 +45,7 @@
 }
 
 .animate-flyby {
-  animation: flyby 1.2s ease-in-out forwards;
+  animation: flyby 0.8s ease-in-out forwards;
 }
 
 /* JELLY BUTTON & GLOW ANIMATION */
@@ -77,8 +77,8 @@ html.viewer-mode-active, html.viewer-mode-active * {
   transform: translate(-50%, -50%);
   font-family: 'Space Grotesk', monospace; /* Use a monospace/techy font */
   font-size: 1.2rem;
-  color: #00ff41; /* Classic matrix green */
-  text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+  color: hsl(var(--accent));
+  text-shadow: 0 0 5px hsl(var(--accent) / 0.8), 0 0 10px hsl(var(--primary) / 0.6);
   pointer-events: none;
   z-index: 9999;
   user-select: none;
