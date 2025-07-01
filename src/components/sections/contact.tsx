@@ -8,7 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ContactMethod } from "@/lib/types";
-import { Github, Linkedin, Mail, Plus, Trash2 } from "lucide-react";
+import { Github, Linkedin, Mail, Plus, Trash2, Instagram } from "lucide-react";
+import { WhatsappIcon, KaggleIcon, HackerRankIcon, GeeksforGeeksIcon } from "@/components/layout/custom-icons";
 
 type AnimatedCardProps = {
   method: ContactMethod;
@@ -19,10 +20,16 @@ type AnimatedCardProps = {
   formatHref: (url: string) => string;
 };
 
+// Available icons: Mail, Linkedin, Github, Instagram, Whatsapp, Kaggle, HackerRank, GeeksforGeeks
 const ICONS: { [key: string]: React.ElementType } = {
   Mail,
   Linkedin,
   Github,
+  Instagram,
+  Whatsapp: WhatsappIcon,
+  Kaggle: KaggleIcon,
+  HackerRank: HackerRankIcon,
+  GeeksforGeeks: GeeksforGeeksIcon,
 };
 
 const AnimatedContactCard: React.FC<AnimatedCardProps> = ({ method, index, editMode, handleUpdate, deleteEntry, formatHref }) => {
@@ -41,7 +48,7 @@ const AnimatedContactCard: React.FC<AnimatedCardProps> = ({ method, index, editM
         {editMode ? (
           <div className="space-y-3 text-left">
             <div>
-              <Label htmlFor={`icon-${method.id}`}>Icon (Mail, Linkedin, Github)</Label>
+              <Label htmlFor={`icon-${method.id}`}>Icon Name (e.g. Mail, Whatsapp)</Label>
               <Input id={`icon-${method.id}`} value={method.icon} onChange={e => handleUpdate(method.id, 'icon', e.target.value)} />
             </div>
               <div>
