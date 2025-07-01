@@ -178,8 +178,8 @@ export const defaultData: PortfolioData = {
         id: 2,
         icon: "Linkedin",
         label: "LinkedIn",
-        value: "linkedin.com/in/ritesh-byte",
-        href: "https://www.linkedin.com/in/ritesh-byte"
+        value: "linkedin.com/in/ritesh-bytegenosis",
+        href: "https://www.linkedin.com/in/ritesh-bytegenosis"
     },
     {
         id: 3,
