@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VenetianMask } from "lucide-react";
-import Image from "next/image";
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AboutData } from '@/lib/types';
@@ -30,14 +29,13 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
             <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-8 items-center">
                 <div className="md:col-span-2 relative">
                     <Card className="overflow-hidden border-2 border-accent/20 shadow-lg shadow-accent/10 transition-all duration-300">
-                        <Image
+                        <img
                             src={profileImageUrl}
                             data-ai-hint="professional portrait"
                             alt="Ritesh"
-                            width={400}
-                            height={500}
+                            width="400"
+                            height="500"
                             className="object-cover w-full h-auto rounded-lg"
-                            priority
                         />
                     </Card>
                 </div>
