@@ -196,6 +196,15 @@ html.viewer-mode-active, html.viewer-mode-active * {
   );
   background-size: 400% 100%;
   animation: miui-gradient-flow 10s ease-in-out infinite;
+  /* Add subtle glow using a safe drop-shadow filter */
+  filter: drop-shadow(0 0 1px hsl(var(--accent) / 0.3));
+  /* Add transition for jello effect on hover */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.miui-glow-text:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 3px hsl(var(--accent) / 0.4));
 }
 
 @keyframes miui-gradient-flow {
