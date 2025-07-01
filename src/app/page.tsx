@@ -174,10 +174,15 @@ export default function HomePage() {
     try {
         const downloadURL = await uploadFile(file, `profile-images/${Date.now()}_${file.name}`);
         handleAboutUpdate('imageUrl', downloadURL);
-        // The debounced save will show its own toast, so a success toast here is redundant.
-    } catch (error) {
+        toast({ description: "Profile picture updated successfully."});
+    } catch (error: any) {
         console.error("Profile image upload failed:", error);
-        toast({ variant: 'destructive', title: 'Upload failed', description: 'Could not upload profile picture. Check console for details.' });
+        // Use the specific error message from the uploadFile function
+        toast({ 
+            variant: 'destructive', 
+            title: 'Upload Failed', 
+            description: error.message || 'An unknown error occurred. Please check the console.' 
+        });
     } finally {
         setIsUploadingProfile(false);
     }
@@ -195,8 +200,14 @@ export default function HomePage() {
             return newData;
         });
         update({ id: toastId, description: "Resume uploaded successfully." });
-    } catch (error) {
-        update({ id: toastId, variant: 'destructive', title: 'Upload failed', description: 'Could not upload resume.' });
+    } catch (error: any) {
+        console.error("Resume upload failed:", error);
+        update({ 
+            id: toastId, 
+            variant: 'destructive', 
+            title: 'Upload Failed', 
+            description: error.message || 'Could not upload resume. Please check the console.' 
+        });
     }
   };
 
