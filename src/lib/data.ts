@@ -178,15 +178,15 @@ export const defaultData: PortfolioData = {
         id: 2,
         icon: "Linkedin",
         label: "LinkedIn",
-        value: "linkedin.com/in/batman",
-        href: "#"
+        value: "linkedin.com/in/ritesh-byte",
+        href: "https://www.linkedin.com/in/ritesh-byte"
     },
     {
         id: 3,
         icon: "Github",
         label: "GitHub",
-        value: "github.com/batman",
-        href: "#"
+        value: "github.com/thebadbat",
+        href: "https://github.com/thebadbat"
     }
   ],
   resumeUrl: "/resume.pdf",
