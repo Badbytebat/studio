@@ -256,6 +256,8 @@ export default function HomePage() {
             handleViewerMode={handleViewerMode}
             batAnimation={batAnimation}
             isFirebaseConfigured={isFirebaseConfigured}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
           />
         </motion.div>
       ) : (

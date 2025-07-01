@@ -5,8 +5,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Eye, Mail, Lock, AlertTriangle } from 'lucide-react';
+import { Eye, Mail, Lock, AlertTriangle, Sun, Moon } from 'lucide-react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 type LoginScreenProps = {
   email: string;
@@ -17,6 +18,8 @@ type LoginScreenProps = {
   handleViewerMode: () => void;
   batAnimation: boolean;
   isFirebaseConfigured: boolean;
+  darkMode: boolean;
+  setDarkMode: (dark: boolean) => void;
 };
 
 const LoginScreen: React.FC<LoginScreenProps> = ({
@@ -24,13 +27,24 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
   password, setPassword,
   handleSignIn,
   handleViewerMode, batAnimation,
-  isFirebaseConfigured
+  isFirebaseConfigured,
+  darkMode, setDarkMode
 }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden">
       <div className="absolute inset-0 glass-effect opacity-40"></div>
 
       <Card className="relative z-10 w-full max-w-md bg-card/80 backdrop-blur-lg border-primary/20 shadow-xl shadow-primary/10">
+        <Button 
+          onClick={() => setDarkMode(!darkMode)} 
+          variant="ghost" 
+          size="icon" 
+          className="absolute top-4 right-4"
+        >
+          {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+
         <CardHeader className="text-center">
           <CardTitle className="font-headline text-2xl flex items-center justify-center gap-2">
             Welcome to Your Portfolio
@@ -83,7 +97,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
           <Button
             onClick={handleViewerMode}
             variant="outline"
-            className="w-full glass-effect rounded-full shadow-lg shadow-accent/30 border-accent/50 hover:bg-accent hover:text-accent-foreground"
+            className={cn(
+              "w-full rounded-full",
+              darkMode 
+                ? "glass-effect shadow-lg shadow-accent/30 border-accent/50 hover:bg-accent hover:text-accent-foreground"
+                : "light-btn"
+            )}
           >
             <Eye className="mr-2 h-4 w-4" /> Just Viewing?
           </Button>
@@ -98,7 +117,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
             alt="Bat flyby"
             width={100}
             height={50}
-            className="w-20 h-auto absolute right-0 top-1/2 transform -translate-y-1/2 animate-flyby filter invert"
+            className={cn(
+              "w-20 h-auto absolute right-0 top-1/2 transform -translate-y-1/2 animate-flyby",
+              darkMode && "filter invert"
+            )}
           />
         </div>
       )}
