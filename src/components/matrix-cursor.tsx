@@ -1,77 +1,75 @@
 
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
 type MatrixCursorProps = {
   darkMode: boolean;
 };
 
 const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode }) => {
-  const throttleTimeout = useRef<NodeJS.Timeout | null>(null);
-  const cursorPos = useRef({ x: 0, y: 0 });
-
-  // Katakana characters for a more authentic Matrix feel
-  const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
-
   useEffect(() => {
-    const createDarkParticle = (x: number, y: number) => {
-      const particle = document.createElement('span'); // Use span for text
-      particle.className = 'matrix-cursor-particle';
-      particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      
-      document.body.appendChild(particle);
+    // Logic for Dark Mode (Matrix Trail)
+    if (darkMode) {
+      const throttleTimeout = { current: null as NodeJS.Timeout | null };
+      const cursorPos = { x: 0, y: 0 };
+      const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
 
-      particle.addEventListener('animationend', () => {
-        if (particle.parentElement) {
-          particle.remove();
-        }
-      });
-    };
+      const createDarkParticle = (x: number, y: number) => {
+        const particle = document.createElement('span');
+        particle.className = 'matrix-cursor-particle';
+        particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        document.body.appendChild(particle);
+        particle.addEventListener('animationend', () => particle.remove());
+      };
 
-    const createLightCursor = () => {
-        const cursorDiv = document.createElement('div');
-        cursorDiv.className = 'light-cursor'; // New class for the dark cursor
-        document.body.appendChild(cursorDiv);
-        return cursorDiv;
-    };
-    
-    let lightModeCursor: HTMLDivElement | null = null;
-    if (!darkMode) {
-        lightModeCursor = createLightCursor();
-    }
-
-
-    const handleMouseMove = (e: MouseEvent) => {
-      cursorPos.current = { x: e.clientX, y: e.clientY };
-      if (darkMode) {
+      const handleMouseMove = (e: MouseEvent) => {
+        cursorPos.x = e.clientX;
+        cursorPos.y = e.clientY;
         if (!throttleTimeout.current) {
-            createDarkParticle(cursorPos.current.x, cursorPos.current.y);
-            throttleTimeout.current = setTimeout(() => {
-                throttleTimeout.current = null;
-            }, 30); // Shorten throttle for a denser trail
+          createDarkParticle(cursorPos.x, cursorPos.y);
+          throttleTimeout.current = setTimeout(() => {
+            throttleTimeout.current = null;
+          }, 30);
         }
-      } else if (lightModeCursor) {
-          lightModeCursor.style.left = `${cursorPos.current.x}px`;
-          lightModeCursor.style.top = `${cursorPos.current.y}px`;
-      }
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
+      };
+      
+      window.addEventListener('mousemove', handleMouseMove);
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (throttleTimeout.current) {
-        clearTimeout(throttleTimeout.current);
-      }
-      // Clean up any remaining particles on unmount
-      document.querySelectorAll('.matrix-cursor-particle, .light-cursor').forEach(el => el.remove());
-    };
-  }, [darkMode]);
+      // Cleanup function specifically for dark mode
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        if (throttleTimeout.current) {
+          clearTimeout(throttleTimeout.current);
+        }
+        document.querySelectorAll('.matrix-cursor-particle').forEach(el => el.remove());
+      };
 
-  return null; // Both modes use DOM manipulation, so this component renders nothing itself.
+    } 
+    // Logic for Light Mode (Inverted Orb)
+    else {
+      const lightModeCursor = document.createElement('div');
+      lightModeCursor.className = 'light-cursor';
+      document.body.appendChild(lightModeCursor);
+      
+      const handleMouseMove = (e: MouseEvent) => {
+        lightModeCursor.style.left = `${e.clientX}px`;
+        lightModeCursor.style.top = `${e.clientY}px`;
+      };
+      
+      window.addEventListener('mousemove', handleMouseMove);
+      
+      // Cleanup function specifically for light mode
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        document.querySelectorAll('.light-cursor').forEach(el => el.remove());
+      };
+    }
+  }, [darkMode]); // This effect re-runs when `darkMode` changes, cleaning up the old mode and setting up the new one.
+
+  return null; // This component directly manipulates the DOM and renders nothing itself.
 };
 
 export default MatrixCursor;
