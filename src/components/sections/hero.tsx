@@ -49,7 +49,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data, editMode, onUpdate, scr
         )}
       </div>
 
-      <div className="z-10 text-center max-w-3xl mx-auto">
+      <div className="z-10 text-center max-w-4xl mx-auto">
         {editMode ? (
           <div className="space-y-4">
             <Input
@@ -74,7 +74,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data, editMode, onUpdate, scr
               animate="animate"
               className="text-4xl md:text-6xl font-headline font-extrabold mb-4 leading-tight"
             >
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+              <span className="jelly-text" data-text={data.title}>
                 {data.title}
               </span>
             </motion.h1>

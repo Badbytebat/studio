@@ -6,7 +6,7 @@ export const defaultData: PortfolioData = {
     logoText: "R",
   },
   hero: {
-    title: "Ritesh",
+    title: "Ritesh Manandhar",
     subtitle: "Aspiring Data Scientist | Analytical Problem Solver | Technology Enthusiast",
   },
   about: {
