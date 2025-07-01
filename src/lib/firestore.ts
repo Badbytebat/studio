@@ -22,8 +22,10 @@ export const getPortfolioData = async (): Promise<PortfolioData> => {
         qualifications: fetchedData.qualifications || defaultData.qualifications,
       };
     } else {
-      console.log('No such document! Creating one with default data.');
-      await setDoc(docRef, defaultData);
+      // If the document doesn't exist, just return the default data.
+      // Don't try to create it here, as this function can be called by unauthenticated users.
+      // The document will be created on the first save by an authenticated user.
+      console.log('No portfolio document found, returning default data.');
       return defaultData;
     }
   } catch (error) {
