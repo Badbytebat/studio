@@ -13,10 +13,12 @@ const ResumeSection = () => {
         <p className="mt-4 text-lg text-muted-foreground mb-8">
           Want a copy of my full professional profile? Download it here.
         </p>
-        <Button size="lg" className="jelly-btn glass-effect rounded-full shadow-lg shadow-accent/30 border-accent/50 text-base py-6 px-8 hover:bg-accent hover:text-accent-foreground">
-          <Download className="w-5 h-5 mr-3" />
-          Download Resume
-        </Button>
+        <a href="/resume.pdf" download="Ritesh-Resume.pdf">
+          <Button size="lg" className="jelly-btn glass-effect rounded-full shadow-lg shadow-accent/30 border-accent/50 text-base py-6 px-8 hover:bg-accent hover:text-accent-foreground">
+            <Download className="w-5 h-5 mr-3" />
+            Download Resume
+          </Button>
+        </a>
       </div>
     </section>
   );
