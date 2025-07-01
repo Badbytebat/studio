@@ -42,6 +42,11 @@ export interface HeaderData {
   logoText: string;
 }
 
+export interface HeroData {
+  title: string;
+  subtitle: string;
+}
+
 export interface AboutData {
   imageUrl: string;
   title: string;
@@ -52,6 +57,7 @@ export interface AboutData {
 
 export interface PortfolioData {
   header: HeaderData;
+  hero: HeroData;
   about: AboutData;
   experience: Experience[];
   skills: Skill[];

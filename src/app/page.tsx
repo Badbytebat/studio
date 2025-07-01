@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import type { PortfolioData, Qualification, HeaderData, AboutData } from '@/lib/types';
+import type { PortfolioData, Qualification, HeaderData, AboutData, HeroData } from '@/lib/types';
 import { defaultData } from '@/lib/data';
 import { getPortfolioData, savePortfolioData } from '@/lib/firestore';
 import { useAuth } from '@/context/auth-provider';
@@ -158,6 +158,15 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
 
+  const handleHeroUpdate = useCallback((field: keyof HeroData, value: string) => {
+    setData(prevData => {
+        const newHero = { ...prevData.hero, [field]: value };
+        const newData = { ...prevData, hero: newHero };
+        debouncedSave(newData);
+        return newData;
+    });
+  }, [debouncedSave]);
+
   const handleAboutUpdate = useCallback((field: keyof AboutData, value: string) => {
     setData(prevData => {
         const newAbout = { ...prevData.about, [field]: value };
@@ -220,7 +229,13 @@ export default function HomePage() {
   };
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(id);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // If element is not found (e.g., 'home'), scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
   
   useEffect(() => {
@@ -284,7 +299,13 @@ export default function HomePage() {
           )}
 
           <main className="flex min-h-screen flex-col bg-background">
-            <HeroSection scrollToSection={scrollToSection} darkMode={darkMode}/>
+            <HeroSection 
+                data={data.hero}
+                editMode={editMode}
+                onUpdate={handleHeroUpdate}
+                scrollToSection={scrollToSection} 
+                darkMode={darkMode}
+            />
             <AboutSection 
               data={data.about}
               editMode={editMode}

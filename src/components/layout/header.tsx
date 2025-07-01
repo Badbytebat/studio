@@ -19,7 +19,7 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection, headerData, editMode, onUpdate }) => {
-  const navItems = ['home', 'about', 'experience', 'skills', 'projects', 'education', 'certifications', 'resume', 'contact'];
+  const navItems = ['about', 'experience', 'skills', 'projects', 'education', 'certifications', 'resume', 'contact'];
 
   return (
     <header className={cn(

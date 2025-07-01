@@ -5,6 +5,10 @@ export const defaultData: PortfolioData = {
   header: {
     logoText: "R",
   },
+  hero: {
+    title: "Ritesh",
+    subtitle: "Aspiring Data Scientist | Analytical Problem Solver | Technology Enthusiast",
+  },
   about: {
     imageUrl: "https://placehold.co/400x500.jpg",
     title: "Driven by Data, Defined by Results",
@@ -188,6 +192,41 @@ export const defaultData: PortfolioData = {
         label: "GitHub",
         value: "github.com/thebadbat",
         href: "https://github.com/thebadbat"
+    },
+    {
+        id: 4,
+        icon: "Instagram",
+        label: "Instagram",
+        value: "instagram.com/thebadbat.ig",
+        href: "https://instagram.com/thebadbat.ig"
+    },
+    {
+        id: 5,
+        icon: "Whatsapp",
+        label: "WhatsApp",
+        value: "+91 8094195155",
+        href: "https://wa.me/918094195155"
+    },
+    {
+        id: 6,
+        icon: "Kaggle",
+        label: "Kaggle",
+        value: "kaggle.com/thebadbat",
+        href: "https://www.kaggle.com/thebadbat"
+    },
+    {
+        id: 7,
+        icon: "HackerRank",
+        label: "HackerRank",
+        value: "hackerrank.com/profile/riteshmdhr",
+        href: "https://www.hackerrank.com/profile/riteshmdhr"
+    },
+    {
+        id: 8,
+        icon: "GeeksforGeeks",
+        label: "GeeksforGeeks",
+        value: "geeksforgeeks.org/user/riteshmdhr",
+        href: "https://auth.geeksforgeeks.org/user/riteshmdhr/practice"
     }
   ],
   resumeUrl: "/resume.pdf",
