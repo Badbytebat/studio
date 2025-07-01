@@ -68,42 +68,47 @@ export const defaultData: PortfolioData = {
     {
       id: 2,
       type: 'certification',
-      title: "Google Data Analytics Professional Certificate",
-      institution: "Google Career Certificates",
-      duration: "Issued Apr 2025",
-      description: "Credential ID: 4FWDFE5Y5DKY. Gained skills in R, SQL, and the full data analysis lifecycle."
+      title: "AWS - Solutions Architecture Job Simulation",
+      institution: "Forage",
+      duration: "Issued Jun 2025",
+      description: "Skills: AWS Elastic Beanstalk, Amazon RDS, Cloud Computing, Amazon S3, Amazon EC2, Amazon Web Services (AWS)",
+      link: "https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/pmnMSL4QiQ9JCgE3W/kkE9HyeNcw6rwCRGw_pmnMSL4QiQ9JCgE3W_myWswfhj978rcKCfJ_1751308317962_completion_certificate.pdf"
     },
-     {
+    {
       id: 3,
       type: 'certification',
-      title: "Data Fundamentals",
-      institution: "IBM SkillsBuild",
-      duration: "Issued Nov 2024",
-      description: "Covered the core concepts of the data science methodology, including data analysis, visualization, and tools."
+      title: "Discover data analysis",
+      institution: "Microsoft Learning",
+      duration: "Issued Jun 2025",
+      description: "Skills: Data Analysis, Microsoft Power BI, Microsoft Power Platform",
+      link: "https://learn.microsoft.com/api/achievements/share/en-us/Thebadbat-3030/FMSCAGPX?sharingId=B002C207BF8AF792"
     },
     {
       id: 4,
       type: 'certification',
-      title: "AWS - Solutions Architecture Job Simulation",
-      institution: "Forage",
+      title: "Get started with data analytics",
+      institution: "Microsoft Learning",
       duration: "Issued Jun 2025",
-      description: "Credential ID: XPGwonksTtrxCvs67. Applied skills in core AWS services like EC2, S3, and RDS."
+      description: "Skills: Data Analysis, Data Visualization, Data Analysis Process",
+      link: "https://learn.microsoft.com/api/achievements/share/en-us/Thebadbat-3030/XQ5VQMZY?sharingId=B002C207BF8AF792"
     },
     {
       id: 5,
       type: 'certification',
-      title: "Microsoft Certified: Power Platform &amp; Fabric",
-      institution: "Microsoft Learning",
-      duration: "Issued 2025",
-      description: "Completed multiple learning paths including 'Discover data analysis', 'Introduction to end-to-end analytics using Microsoft Fabric', and 'Get started with data science in Microsoft Fabric'."
+      title: "Google Data Analytics Professional Certificate",
+      institution: "Google Career Certificates",
+      duration: "Issued Apr 2025",
+      description: "Credential ID: 4FWDFE5Y5DKY. Skills: R (Programming Language), Data Analysis, Data Processing, Data Management, Data Visualization, SQL",
+      link: "https://www.coursera.org/account/accomplishments/professional-cert/certificate/4FWDFE5Y5DKY"
     },
     {
       id: 6,
       type: 'certification',
-      title: "LIDAR Data Processing and Applications",
-      institution: "IIRS, ISRO",
-      duration: "Issued Aug 2023",
-      description: "Specialized training in large-scale data processing for remote sensing applications."
+      title: "Introduction to end-to-end analytics using Microsoft Fabric",
+      institution: "Microsoft Learning",
+      duration: "Issued Apr 2025",
+      description: "Skills: Business Analysis, Data Analysis, Data Engineering, Data Science, Microsoft Fabric",
+      link: "https://learn.microsoft.com/api/achievements/share/en-us/Thebadbat-3030/A4QR26Q7?sharingId=B002C207BF8AF792"
     },
     {
       id: 7,
@@ -111,7 +116,44 @@ export const defaultData: PortfolioData = {
       title: "Prompt Design in Vertex AI Skill Badge",
       institution: "Google",
       duration: "Issued Apr 2025",
-      description: "Demonstrated proficiency in designing and implementing prompts for Generative AI models."
+      description: "",
+      link: "https://www.credly.com/badges/bd3319d6-379a-4611-8615-f97360dcdcb5/linked_in_profile"
+    },
+     {
+      id: 8,
+      type: 'certification',
+      title: "Train and track machine learning models with MLflow in Microsoft Fabric",
+      institution: "Microsoft Learning",
+      duration: "Issued Apr 2025",
+      description: "",
+      link: "https://learn.microsoft.com/en-us/training/modules/train-track-model-fabric/7-summary#completion"
+    },
+    {
+      id: 9,
+      type: 'certification',
+      title: "Data Fundamentals",
+      institution: "IBM SkillsBuild",
+      duration: "Issued Nov 2024",
+      description: "Skills: Clean Data, Data Analysis, Data Analysis Process, Data Science, Refine Data, Data Visualization, Data Tools, Data Science Methodology",
+      link: "https://www.credly.com/badges/70218c25-53e3-4fea-94f9-44f97a3f2ab6"
+    },
+    {
+      id: 10,
+      type: 'certification',
+      title: "LIDAR Data Processing and Applications",
+      institution: "Indian Institute of Remote Sensing (IIRS), Indian Space Research Organization (ISRO)",
+      duration: "Issued Aug 2023",
+      description: "Skills: Data Processing, Large-scale Data Processing",
+      link: "https://isrolms.iirs.gov.in/mod/customcert/view.php?id=4520&downloadown=1"
+    },
+    {
+      id: 11,
+      type: 'certification',
+      title: "Get started with data science in Microsoft Fabric",
+      institution: "Microsoft Learning",
+      duration: "Issued 2025",
+      description: "Skills: Microsoft Fabric, Data Analysis",
+      link: "https://learn.microsoft.com/api/achievements/share/en-us/Thebadbat-3030/FMZWPWRX?sharingId=B002C207BF8AF792"
     }
   ]
 };

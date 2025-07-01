@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, Trash2 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Plus, Trash2, ExternalLink } from 'lucide-react';
 
 type Props = {
   data: Qualification[];
@@ -36,35 +37,57 @@ const CertificationsSection: React.FC<Props> = ({ data, editMode, updateEntry, a
           <Card key={item.id} className="bg-card/50 border-primary/20">
             <CardHeader>
               <div className="flex justify-between items-start">
-                  <div>
+                  <div className="flex-grow">
                     {editMode ? (
                       <Input value={item.title} onChange={(e) => handleUpdate(item.id, 'title', e.target.value)} placeholder="Degree/Certificate" className="text-lg font-bold" />
                     ) : (
                       <CardTitle>{item.title}</CardTitle>
                     )}
                     {editMode ? (
-                      <Input value={item.institution} onChange={(e) => handleUpdate(item.id, 'institution', e.target.value)} placeholder="Institution" className="text-muted-foreground" />
+                      <Input value={item.institution} onChange={(e) => handleUpdate(item.id, 'institution', e.target.value)} placeholder="Institution" className="text-muted-foreground mt-1" />
                     ) : (
                       <CardDescription>{item.institution}</CardDescription>
                     )}
                   </div>
-                  {editMode ? (
-                        <Input value={item.duration} onChange={(e) => handleUpdate(item.id, 'duration', e.target.value)} placeholder="Duration" className="w-48 text-right"/>
-                    ) : (
-                        <p className="text-sm text-muted-foreground text-right">{item.duration}</p>
-                    )}
+                  <div className="text-right flex-shrink-0 ml-4">
+                    {editMode ? (
+                          <Input value={item.duration} onChange={(e) => handleUpdate(item.id, 'duration', e.target.value)} placeholder="Duration" className="w-48"/>
+                      ) : (
+                          <p className="text-sm text-muted-foreground">{item.duration}</p>
+                      )}
+                  </div>
               </div>
             </CardHeader>
             <CardContent>
               {editMode ? (
                 <Textarea value={item.description} onChange={(e) => handleUpdate(item.id, 'description', e.target.value)} placeholder="Description" />
               ) : (
-                <p>{item.description}</p>
+                item.description && <p>{item.description}</p>
               )}
+              
+              {!editMode && item.link && (
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className={item.description ? 'mt-4 inline-block' : 'inline-block'}>
+                  <Button variant="outline" className="group">
+                    View Certificate <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </Button>
+                </a>
+              )}
+
               {editMode && (
-                <Button variant="destructive" size="sm" onClick={() => deleteEntry('qualifications', item.id)} className="mt-4">
-                  <Trash2 className="w-4 h-4 mr-2" /> Delete
-                </Button>
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <Label htmlFor={`cert-link-${item.id}`} className="mb-2 block">Certificate Link</Label>
+                    <Input 
+                        id={`cert-link-${item.id}`}
+                        value={item.link || ''} 
+                        onChange={(e) => handleUpdate(item.id, 'link', e.target.value)} 
+                        placeholder="https://..." 
+                    />
+                  </div>
+                  <Button variant="destructive" size="sm" onClick={() => deleteEntry('qualifications', item.id)}>
+                    <Trash2 className="w-4 h-4 mr-2" /> Delete
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>

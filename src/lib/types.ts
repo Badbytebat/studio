@@ -27,6 +27,7 @@ export interface Qualification {
   institution: string;
   duration: string;
   description: string;
+  link?: string;
 }
 
 export interface PortfolioData {
