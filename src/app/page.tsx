@@ -310,8 +310,6 @@ export default function HomePage() {
           data={data.about}
           editMode={editMode}
           onUpdate={handleAboutUpdate}
-          onImageUpload={handleProfileImageUpload}
-          isUploading={isProfilePicUploading}
         />
         <ExperienceSection 
             data={data.experience} 
@@ -352,7 +350,7 @@ export default function HomePage() {
             resumeUrl={data.resumeUrl}
             editMode={editMode}
             onUpload={handleResumeUpload}
-            isUploading={isUploading}
+            isUploading={isResumeUploading}
         />
         <ContactSection
             data={data.contact}

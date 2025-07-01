@@ -1,39 +1,20 @@
 
 "use client";
 
-import { useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VenetianMask, Upload, Loader2 } from "lucide-react";
+import { VenetianMask } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AboutData } from '@/lib/types';
-import { Button } from '../ui/button';
-import Image from 'next/image';
 
 type Props = {
   data: AboutData;
   editMode: boolean;
   onUpdate: (field: keyof AboutData, value: string) => void;
-  onImageUpload: (file: File) => void;
-  isUploading: boolean;
 };
 
-const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload, isUploading }) => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            onImageUpload(file);
-        }
-    };
-
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
+const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
     
-    const profileImageUrl = data.imageUrl || "https://placehold.co/400x500.png";
-
     const handleTextUpdate = (field: keyof AboutData, value: string) => {
         onUpdate(field, value);
     };
