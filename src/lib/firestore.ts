@@ -17,6 +17,7 @@ export const getPortfolioData = async (): Promise<PortfolioData> => {
       const fetchedData = docSnap.data();
       return {
         header: fetchedData.header || defaultData.header,
+        about: fetchedData.about || defaultData.about,
         experience: fetchedData.experience || defaultData.experience,
         skills: fetchedData.skills || defaultData.skills,
         projects: fetchedData.projects || defaultData.projects,

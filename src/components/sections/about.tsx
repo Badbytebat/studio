@@ -1,10 +1,32 @@
 "use client";
 
+import { useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VenetianMask } from "lucide-react";
+import { VenetianMask, Upload } from "lucide-react";
 import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import type { AboutData } from '@/lib/types';
 
-const AboutSection = () => {
+type Props = {
+  data: AboutData;
+  editMode: boolean;
+  onUpload: (file: File) => void;
+};
+
+const AboutSection: React.FC<Props> = ({ data, editMode, onUpload }) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            onUpload(file);
+        }
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
     return (
         <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center mb-12">
@@ -16,10 +38,10 @@ const AboutSection = () => {
                 </p>
             </div>
             <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-8 items-center">
-                <div className="md:col-span-2">
+                <div className="md:col-span-2 relative">
                     <Card className="overflow-hidden border-2 border-accent/20 shadow-lg shadow-accent/10">
                         <Image
-                            src="https://placehold.co/400x500.png"
+                            src={data.imageUrl}
                             data-ai-hint="professional portrait"
                             alt="Ritesh"
                             width={400}
@@ -27,24 +49,38 @@ const AboutSection = () => {
                             className="object-cover w-full h-full"
                         />
                     </Card>
+                     {editMode && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-lg">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="hidden"
+                                accept="image/*"
+                            />
+                            <Button onClick={handleUploadClick} variant="secondary">
+                                <Upload className="mr-2 h-4 w-4" /> Change Picture
+                            </Button>
+                        </div>
+                    )}
                 </div>
                 <div className="md:col-span-3">
                     <Card className="bg-card/50 border-primary/20 p-6 rounded-lg">
                         <CardHeader>
                              <CardTitle className="flex items-center gap-2 font-headline text-2xl">
                                 <VenetianMask className="text-primary"/>
-                                Strategist by Day, Coder by Night
+                                {data.title}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4 text-foreground/80">
                             <p>
-                                I am an aspiring Data Scientist with a passion for uncovering insights from complex datasets and building intelligent solutions. My journey in technology began with a curiosity for how things work, which has since evolved into a dedicated pursuit of knowledge in machine learning, data analysis, and software development.
+                                {data.description1}
                             </p>
                             <p>
-                                Like the caped crusader, I am analytical, persistent, and resourceful. I thrive on challenges and am constantly honing my skills to tackle the next big problem. My goal is to leverage data to drive innovation and create a tangible impact.
+                                {data.description2}
                             </p>
                             <p>
-                                When I'm not crunching numbers or writing code, I explore new technologies, contribute to open-source projects, and enjoy a good cup of coffee.
+                                {data.description3}
                             </p>
                         </CardContent>
                     </Card>

@@ -42,8 +42,17 @@ export interface HeaderData {
   logoText: string;
 }
 
+export interface AboutData {
+  imageUrl: string;
+  title: string;
+  description1: string;
+  description2: string;
+  description3: string;
+}
+
 export interface PortfolioData {
   header: HeaderData;
+  about: AboutData;
   experience: Experience[];
   skills: Skill[];
   projects: Project[];

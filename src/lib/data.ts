@@ -4,6 +4,13 @@ export const defaultData: PortfolioData = {
   header: {
     logoText: "R",
   },
+  about: {
+    imageUrl: "https://placehold.co/400x500.png",
+    title: "Strategist by Day, Coder by Night",
+    description1: "I am an aspiring Data Scientist with a passion for uncovering insights from complex datasets and building intelligent solutions. My journey in technology began with a curiosity for how things work, which has since evolved into a dedicated pursuit of knowledge in machine learning, data analysis, and software development.",
+    description2: "Like the caped crusader, I am analytical, persistent, and resourceful. I thrive on challenges and am constantly honing my skills to tackle the next big problem. My goal is to leverage data to drive innovation and create a tangible impact.",
+    description3: "When I'm not crunching numbers or writing code, I explore new technologies, contribute to open-source projects, and enjoy a good cup of coffee.",
+  },
   experience: [
     {
       id: 1,
