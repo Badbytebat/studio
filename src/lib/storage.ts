@@ -15,23 +15,18 @@ export const uploadFile = async (file: File, path: string): Promise<string> => {
     return downloadURL;
 
   } catch (error: any) {
-    console.error("Detailed upload error from Firebase:", error);
+    console.error("Firebase upload error:", error.code, error.message);
     
-    // Provide more specific error messages based on Firebase error codes
-    switch (error.code) {
-      case 'storage/unauthorized':
-        throw new Error('Permission Denied: Your Firebase Storage security rules are preventing this upload. Please ensure you are logged in and the rules allow writes to this path.');
-      case 'storage/unauthenticated':
-        throw new Error('Authentication Required: You must be signed in to upload files. Please sign in again.');
-      case 'storage/retry-limit-exceeded':
-        throw new Error('Network Error: The upload failed after multiple retries. Please check your internet connection.');
-      case 'storage/canceled':
-         throw new Error('Upload Canceled: The upload was canceled by the user or the browser.');
-      case 'storage/unknown':
-        throw new Error('An unknown storage error occurred. Please check the developer console and your Firebase setup.');
-      default:
-        // Re-throw a generic error but include the original code
-        throw new Error(`Upload failed with an unexpected error. Code: ${error.code || 'N/A'}`);
+    // Provide more specific, helpful error messages based on Firebase error codes.
+    // This helps diagnose issues like misconfigured security rules.
+    let userFriendlyMessage = `Upload failed: ${error.message}. Check the browser console and your Firebase Storage rules.`;
+    
+    if (error.code === 'storage/unauthorized') {
+      userFriendlyMessage = 'Permission Denied. Please check your Firebase Storage security rules to ensure you have write permission.';
+    } else if (error.code === 'storage/unauthenticated') {
+      userFriendlyMessage = 'Authentication Required. You must be signed in to upload files.';
     }
+    
+    throw new Error(userFriendlyMessage);
   }
 };
