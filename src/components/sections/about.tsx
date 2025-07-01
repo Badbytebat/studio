@@ -48,71 +48,34 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
                     A glimpse into the mind behind the cowl.
                 </p>
             </div>
-            <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-8 items-center">
-                <div className="md:col-span-2 relative group">
-                    <Image
-                        src={profileImageUrl}
-                        alt="Ritesh"
-                        width={400}
-                        height={500}
-                        className="object-cover w-full h-auto rounded-lg border-2 border-accent/20 shadow-lg shadow-accent/10"
-                        data-ai-hint="professional portrait"
-                    />
-                     {editMode && (
-                        <>
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                                className="hidden"
-                                accept="image/png, image/jpeg, image/gif"
-                                disabled={isUploading}
-                            />
-                            <Button 
-                                onClick={handleUploadClick}
-                                variant="outline"
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-background/70 hover:bg-background"
-                                disabled={isUploading}
-                            >
-                                {isUploading ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Upload className="mr-2 h-4 w-4" />
-                                )}
-                                {isUploading ? "Uploading..." : "Change Picture"}
-                            </Button>
-                        </>
-                    )}
-                </div>
-                <div className="md:col-span-3">
-                    <Card className="bg-card/50 border-primary/20 p-6 rounded-lg transition-all duration-300 hover:shadow-lg">
-                        <CardHeader>
-                             <CardTitle className="flex items-center gap-2 font-headline text-2xl">
-                                <VenetianMask className="text-primary"/>
-                                {editMode ? (
-                                    <Input value={data.title} onChange={(e) => handleTextUpdate('title', e.target.value)} className="text-2xl font-bold" />
-                                ) : (
-                                    data.title
-                                )}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-foreground/80">
-                           {editMode ? (
-                                <>
-                                    <Textarea value={data.description1} onChange={(e) => handleTextUpdate('description1', e.target.value)} rows={4} />
-                                    <Textarea value={data.description2} onChange={(e) => handleTextUpdate('description2', e.target.value)} rows={4} />
-                                    <Textarea value={data.description3} onChange={(e) => handleTextUpdate('description3', e.target.value)} rows={3} />
-                                </>
-                           ) : (
-                                <>
-                                    <p>{data.description1}</p>
-                                    <p>{data.description2}</p>
-                                    <p>{data.description3}</p>
-                                </>
-                           )}
-                        </CardContent>
-                    </Card>
-                </div>
+            <div className="max-w-4xl mx-auto">
+                <Card className="bg-card/50 border-primary/20 p-6 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-accent/20 hover:border-accent/50">
+                    <CardHeader>
+                         <CardTitle className="flex items-center gap-2 font-headline text-2xl">
+                            <VenetianMask className="text-primary"/>
+                            {editMode ? (
+                                <Input value={data.title} onChange={(e) => handleTextUpdate('title', e.target.value)} className="text-2xl font-bold" />
+                            ) : (
+                                data.title
+                            )}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 text-foreground/80">
+                       {editMode ? (
+                            <>
+                                <Textarea value={data.description1} onChange={(e) => handleTextUpdate('description1', e.target.value)} rows={4} />
+                                <Textarea value={data.description2} onChange={(e) => handleTextUpdate('description2', e.target.value)} rows={4} />
+                                <Textarea value={data.description3} onChange={(e) => handleTextUpdate('description3', e.target.value)} rows={3} />
+                            </>
+                       ) : (
+                            <>
+                                <p>{data.description1}</p>
+                                <p>{data.description2}</p>
+                                <p>{data.description3}</p>
+                            </>
+                       )}
+                    </CardContent>
+                </Card>
             </div>
         </section>
     )
