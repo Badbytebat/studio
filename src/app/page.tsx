@@ -185,7 +185,7 @@ export default function HomePage() {
   const handleProfilePicUpload = async (file: File) => {
     if (!editMode || !file) return;
 
-    const { update } = toast({ description: "Uploading profile picture..." });
+    const { id: toastId, update } = toast({ description: "Uploading profile picture..." });
     try {
         const downloadURL = await uploadFile(file, `profile-pictures/profile_${Date.now()}_${file.name}`);
         setData(prevData => {
