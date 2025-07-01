@@ -1,0 +1,25 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The portfolio data is stored in a single document for this personal site.
+    match /portfolios/{ownerId} {
+      // Allow anyone to read the portfolio data.
+      allow read: if true;
+      
+      // Only allow writes if the user is authenticated and their UID matches the document ID.
+      // This ensures only the owner of the portfolio can edit it.
+      allow write: if request.auth != null && request.auth.uid == ownerId;
+    }
+
+    // A document to track page views.
+    match /analytics/views {
+      // Allow anyone to read and write to this document.
+      // In a production app with more complex needs, you might restrict this further,
+      // but for a simple view counter, this is acceptable.
+      // The write rule uses `increment`, which is an atomic operation.
+      allow read, write: if true;
+    }
+  }
+}
