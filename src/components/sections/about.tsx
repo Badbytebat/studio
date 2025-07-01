@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,16 +29,14 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
             </div>
             <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-8 items-center">
                 <div className="md:col-span-2 relative">
-                    <Card className="overflow-hidden border-2 border-accent/20 shadow-lg shadow-accent/10 transition-all duration-300">
-                        <img
-                            src={profileImageUrl}
-                            data-ai-hint="professional portrait"
-                            alt="Ritesh"
-                            width="400"
-                            height="500"
-                            className="object-cover w-full h-auto rounded-lg"
-                        />
-                    </Card>
+                    <img
+                        src={profileImageUrl}
+                        data-ai-hint="professional portrait"
+                        alt="Ritesh"
+                        width="400"
+                        height="500"
+                        className="object-cover w-full h-auto rounded-lg border-2 border-accent/20 shadow-lg shadow-accent/10"
+                    />
                 </div>
                 <div className="md:col-span-3">
                     <Card className="bg-card/50 border-primary/20 p-6 rounded-lg transition-all duration-300 hover:shadow-lg">
