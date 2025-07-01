@@ -2,6 +2,8 @@
 import { storage } from './firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+const UPLOAD_TIMEOUT = 30000; // 30 seconds
+
 export const uploadFile = async (file: File, path: string): Promise<string> => {
   if (!file) {
     throw new Error('No file provided for upload.');
@@ -9,22 +11,32 @@ export const uploadFile = async (file: File, path: string): Promise<string> => {
   const storageRef = ref(storage, path);
   
   try {
-    const snapshot = await uploadBytes(storageRef, file);
+    const uploadPromise = uploadBytes(storageRef, file);
+
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Upload timed out after 30 seconds. Please try again.')), UPLOAD_TIMEOUT)
+    );
+
+    const snapshot = await Promise.race([uploadPromise, timeoutPromise]);
+    
     const downloadURL = await getDownloadURL(snapshot.ref);
     return downloadURL;
   } catch (error: any) {
-    console.error("Detailed upload error:", error); // Log the full error object
+    console.error("Detailed upload error:", error);
     
-    // Re-throw a more specific error based on the Firebase error code
+    if (error.message.includes('timed out')) {
+      throw error;
+    }
+    
     switch (error.code) {
       case 'storage/unauthorized':
-        throw new Error('Permission denied. You might need to check your Storage security rules.');
+        throw new Error('Permission denied. Please check your Storage security rules.');
       case 'storage/unauthenticated':
         throw new Error('Authentication required. Please sign in again.');
       case 'storage/canceled':
         throw new Error('Upload canceled by the user.');
       case 'storage/object-not-found':
-         throw new Error('File not found. This should not happen during an upload.');
+         throw new Error('File not found during upload process.');
       case 'storage/bucket-not-found':
         throw new Error('Storage bucket not found. Check your Firebase project configuration.');
       case 'storage/project-not-found':
