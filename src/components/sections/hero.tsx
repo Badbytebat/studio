@@ -74,7 +74,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ data, editMode, onUpdate, scr
               animate="animate"
               className="text-4xl md:text-6xl font-headline font-extrabold mb-4 leading-tight"
             >
-              <span className="jelly-text" data-text={data.title}>
+              <span className="miui-glow-text" data-text={data.title}>
                 {data.title}
               </span>
             </motion.h1>
