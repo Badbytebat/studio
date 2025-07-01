@@ -3,20 +3,22 @@
 
 import { useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VenetianMask, Upload } from "lucide-react";
+import { VenetianMask, Upload, Loader2 } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AboutData } from '@/lib/types';
 import { Button } from '../ui/button';
+import Image from 'next/image';
 
 type Props = {
   data: AboutData;
   editMode: boolean;
   onUpdate: (field: keyof AboutData, value: string) => void;
   onImageUpload: (file: File) => void;
+  isUploading: boolean;
 };
 
-const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload }) => {
+const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload, isUploading }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +34,10 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
     
     const profileImageUrl = data.imageUrl || "https://placehold.co/400x500.png";
 
+    const handleTextUpdate = (field: keyof AboutData, value: string) => {
+        onUpdate(field, value);
+    };
+
     return (
         <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center mb-12">
@@ -44,13 +50,13 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
             </div>
             <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-8 items-center">
                 <div className="md:col-span-2 relative group">
-                    <img
+                    <Image
                         src={profileImageUrl}
-                        data-ai-hint="professional portrait"
                         alt="Ritesh"
                         width="400"
                         height="500"
                         className="object-cover w-full h-auto rounded-lg border-2 border-accent/20 shadow-lg shadow-accent/10"
+                        data-ai-hint="professional portrait"
                     />
                      {editMode && (
                         <>
@@ -60,14 +66,20 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
                                 onChange={handleFileChange}
                                 className="hidden"
                                 accept="image/png, image/jpeg, image/gif"
+                                disabled={isUploading}
                             />
                             <Button 
                                 onClick={handleUploadClick}
                                 variant="outline"
                                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-background/70 hover:bg-background"
+                                disabled={isUploading}
                             >
-                                <Upload className="mr-2 h-4 w-4" />
-                                Change Picture
+                                {isUploading ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Upload className="mr-2 h-4 w-4" />
+                                )}
+                                {isUploading ? "Uploading..." : "Change Picture"}
                             </Button>
                         </>
                     )}
@@ -78,7 +90,7 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
                              <CardTitle className="flex items-center gap-2 font-headline text-2xl">
                                 <VenetianMask className="text-primary"/>
                                 {editMode ? (
-                                    <Input value={data.title} onChange={(e) => onUpdate('title', e.target.value)} className="text-2xl font-bold" />
+                                    <Input value={data.title} onChange={(e) => handleTextUpdate('title', e.target.value)} className="text-2xl font-bold" />
                                 ) : (
                                     data.title
                                 )}
@@ -87,9 +99,9 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
                         <CardContent className="space-y-4 text-foreground/80">
                            {editMode ? (
                                 <>
-                                    <Textarea value={data.description1} onChange={(e) => onUpdate('description1', e.target.value)} rows={4} />
-                                    <Textarea value={data.description2} onChange={(e) => onUpdate('description2', e.target.value)} rows={4} />
-                                    <Textarea value={data.description3} onChange={(e) => onUpdate('description3', e.target.value)} rows={3} />
+                                    <Textarea value={data.description1} onChange={(e) => handleTextUpdate('description1', e.target.value)} rows={4} />
+                                    <Textarea value={data.description2} onChange={(e) => handleTextUpdate('description2', e.target.value)} rows={4} />
+                                    <Textarea value={data.description3} onChange={(e) => handleTextUpdate('description3', e.target.value)} rows={3} />
                                 </>
                            ) : (
                                 <>

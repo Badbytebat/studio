@@ -6,7 +6,7 @@ import type { PortfolioData, Qualification, HeaderData, AboutData } from '@/lib/
 import { defaultData } from '@/lib/data';
 import { getPortfolioData, savePortfolioData } from '@/lib/firestore';
 import { useAuth } from '@/context/auth-provider';
-import { useToast, toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
 import { uploadFile } from '@/lib/storage';
 
@@ -33,6 +33,7 @@ export default function HomePage() {
   const [initialDataLoading, setInitialDataLoading] = useState(true);
   const [showLogin, setShowLogin] = useState(true);
   const [editMode, setEditMode] = useState(false);
+  const [isUploadingProfile, setIsUploadingProfile] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,6 +42,7 @@ export default function HomePage() {
   const [shatterActive, setShatterActive] = useState(false);
   const [batAnimation, setBatAnimation] = useState(false);
 
+  const { toast } = useToast();
   const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'CHANGEME';
 
   // Fetch initial data
@@ -166,16 +168,18 @@ export default function HomePage() {
   }, [debouncedSave]);
   
   const handleProfileImageUpload = async (file: File) => {
-    if (!editMode || !file) return;
+    if (!editMode || !file || isUploadingProfile) return;
 
-    const { id: toastId, update } = toast({ description: "Uploading profile picture..." });
+    setIsUploadingProfile(true);
     try {
         const downloadURL = await uploadFile(file, `profile-images/${Date.now()}_${file.name}`);
         handleAboutUpdate('imageUrl', downloadURL);
-        update({ id: toastId, description: "Profile picture uploaded successfully." });
+        // The debounced save will show its own toast, so a success toast here is redundant.
     } catch (error) {
-        console.error("Profile image upload error:", error);
-        update({ id: toastId, variant: 'destructive', title: 'Upload failed', description: 'Could not upload profile picture.' });
+        console.error("Profile image upload failed:", error);
+        toast({ variant: 'destructive', title: 'Upload failed', description: 'Could not upload profile picture. Check console for details.' });
+    } finally {
+        setIsUploadingProfile(false);
     }
   };
   
@@ -281,6 +285,7 @@ export default function HomePage() {
           editMode={editMode}
           onUpdate={handleAboutUpdate}
           onImageUpload={handleProfileImageUpload}
+          isUploading={isUploadingProfile}
         />
         <ExperienceSection 
             data={data.experience} 
