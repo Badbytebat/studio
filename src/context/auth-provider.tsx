@@ -77,7 +77,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({ title: 'Check your email', description: `A sign-in link has been sent to ${email}.` });
     } catch (error: any) {
       console.error('Send sign in link error', error);
-      if (error.code === 'auth/invalid-api-key' || (error.message && error.message.includes('api-key-not-valid'))) {
+      if (error.code === 'auth/operation-not-allowed') {
+        toast({
+          variant: 'destructive',
+          title: 'Sign-in Method Disabled',
+          description: 'Email link (passwordless) sign-in is not enabled in your Firebase project. Please enable it in the Firebase Console.',
+          duration: 10000,
+        });
+      } else if (error.code === 'auth/invalid-api-key' || (error.message && error.message.includes('api-key-not-valid'))) {
         toast({
           variant: 'destructive',
           title: 'Firebase Configuration Error',
