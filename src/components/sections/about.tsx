@@ -32,7 +32,7 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
         fileInputRef.current?.click();
     };
     
-    const profileImageUrl = data.imageUrl || "https://placehold.co/400x500.jpg";
+    const profileImageUrl = "https://placehold.co/400x500.jpg";
 
     const handleTextUpdate = (field: keyof AboutData, value: string) => {
         onUpdate(field, value);
