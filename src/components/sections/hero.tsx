@@ -11,7 +11,7 @@ type HeroSectionProps = {
 };
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
 };
 
@@ -35,7 +35,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
           variants={fadeInUp}
           initial="initial"
           animate="animate"
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="text-4xl md:text-6xl font-headline font-extrabold mb-4 leading-tight"
         >
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
@@ -46,7 +46,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
           variants={fadeInUp}
           initial="initial"
           animate="animate"
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeInOut" }}
           className="text-xl md:text-2xl text-foreground/80 font-light"
         >
           Aspiring Data Scientist | Analytical Problem Solver | Technology Enthusiast
@@ -57,7 +57,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
         variants={fadeInUp}
         initial="initial"
         animate="animate"
-        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
         className="z-10 flex flex-col sm:flex-row gap-4 mt-10"
       >
         <Button

@@ -45,7 +45,7 @@
 }
 
 .animate-flyby {
-  animation: flyby 1.2s ease-out forwards;
+  animation: flyby 1.2s ease-in-out forwards;
 }
 
 /* JELLY BUTTON & GLOW ANIMATION */
