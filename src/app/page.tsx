@@ -192,13 +192,16 @@ export default function HomePage() {
         const downloadURL = await uploadFile(file, `profile-pictures/profile_${Date.now()}_${file.name}`);
         console.log("Upload successful. Download URL:", downloadURL);
 
-        setData(prevData => {
-            const newAbout = { ...prevData.about, imageUrl: downloadURL };
-            const newData = { ...prevData, about: newAbout };
-            console.log("Updating local state and preparing to save to Firestore.");
-            debouncedSave(newData);
-            return newData;
-        });
+        const newData = {
+            ...data,
+            about: {
+                ...data.about,
+                imageUrl: downloadURL
+            }
+        };
+
+        setData(newData);
+        debouncedSave(newData);
 
         update({ id: toastId, description: "Profile picture updated successfully." });
     } catch (error) {
