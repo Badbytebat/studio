@@ -280,7 +280,7 @@ export default function HomePage() {
           key="portfolio"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeInOut' } }}
-          className={darkMode ? 'dark' : 'light'}
+          className={`flex min-h-screen flex-col ${darkMode ? 'dark' : 'light'}`}
         >
           {!editMode && <MatrixCursor darkMode={darkMode} />}
           <Header 
@@ -298,7 +298,7 @@ export default function HomePage() {
             </div>
           )}
 
-          <main className="flex min-h-screen flex-col bg-background">
+          <main className="flex flex-1 flex-col bg-background">
             <HeroSection 
                 data={data.hero}
                 editMode={editMode}
