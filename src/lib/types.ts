@@ -22,6 +22,7 @@ export interface Project {
 
 export interface Qualification {
   id: number;
+  type: 'education' | 'certification';
   title: string;
   institution: string;
   duration: string;

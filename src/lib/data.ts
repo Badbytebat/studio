@@ -59,6 +59,7 @@ export const defaultData: PortfolioData = {
   qualifications: [
     {
       id: 1,
+      type: 'education',
       title: "12th, Business/Commerce, General",
       institution: "National Institute of Open Schooling (NIOS)",
       duration: "Mar 2023 - Nov 2023",
@@ -66,6 +67,7 @@ export const defaultData: PortfolioData = {
     },
     {
       id: 2,
+      type: 'certification',
       title: "Google Data Analytics Professional Certificate",
       institution: "Google Career Certificates",
       duration: "Issued Apr 2025",
@@ -73,6 +75,7 @@ export const defaultData: PortfolioData = {
     },
      {
       id: 3,
+      type: 'certification',
       title: "Data Fundamentals",
       institution: "IBM SkillsBuild",
       duration: "Issued Nov 2024",
@@ -80,6 +83,7 @@ export const defaultData: PortfolioData = {
     },
     {
       id: 4,
+      type: 'certification',
       title: "AWS - Solutions Architecture Job Simulation",
       institution: "Forage",
       duration: "Issued Jun 2025",
@@ -87,13 +91,15 @@ export const defaultData: PortfolioData = {
     },
     {
       id: 5,
-      title: "Microsoft Certified: Power Platform & Fabric",
+      type: 'certification',
+      title: "Microsoft Certified: Power Platform &amp; Fabric",
       institution: "Microsoft Learning",
       duration: "Issued 2025",
       description: "Completed multiple learning paths including 'Discover data analysis', 'Introduction to end-to-end analytics using Microsoft Fabric', and 'Get started with data science in Microsoft Fabric'."
     },
     {
       id: 6,
+      type: 'certification',
       title: "LIDAR Data Processing and Applications",
       institution: "IIRS, ISRO",
       duration: "Issued Aug 2023",
@@ -101,6 +107,7 @@ export const defaultData: PortfolioData = {
     },
     {
       id: 7,
+      type: 'certification',
       title: "Prompt Design in Vertex AI Skill Badge",
       institution: "Google",
       duration: "Issued Apr 2025",

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import type { PortfolioData } from '@/lib/types';
+import type { PortfolioData, Qualification } from '@/lib/types';
 import { defaultData } from '@/lib/data';
 import { getPortfolioData, savePortfolioData } from '@/lib/firestore';
 import { useAuth } from '@/context/auth-provider';
@@ -18,7 +18,8 @@ import AboutSection from '@/components/sections/about';
 import ExperienceSection from '@/components/sections/experience';
 import SkillsSection from '@/components/sections/skills';
 import ProjectsSection from '@/components/sections/projects';
-import QualificationsSection from '@/components/sections/qualifications';
+import EducationSection from '@/components/sections/education';
+import CertificationsSection from '@/components/sections/certifications';
 import ResumeSection from '@/components/sections/resume';
 import ContactSection from '@/components/sections/contact';
 import { Loader2 } from 'lucide-react';
@@ -100,7 +101,10 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
   
-  const handleAdd = useCallback(<K extends keyof PortfolioData>(section: K) => {
+  const handleAdd = useCallback(<K extends keyof PortfolioData>(
+    section: K,
+    itemType?: 'education' | 'certification'
+  ) => {
     setData(prevData => {
         const sectionData = prevData[section] as any[];
         const newId = sectionData.length > 0 ? Math.max(...sectionData.map(item => item.id)) + 1 : 1;
@@ -117,11 +121,11 @@ export default function HomePage() {
                 newItem = { id: newId, title: 'New Project', description: '...', tags: [], link: '#' };
                 break;
             case 'qualifications':
-                newItem = { id: newId, title: 'New Qualification', institution: '...', duration: 'Year', description: '...' };
+                newItem = { id: newId, type: itemType, title: 'New Entry', institution: 'Institution', duration: 'Year', description: '...' };
                 break;
         }
 
-        const newData = { ...prevData, [section]: [...sectionData, newItem] };
+        const newData = { ...prevData, [section]: [...(sectionData || []), newItem] };
         debouncedSave(newData);
         return newData;
     });
@@ -189,6 +193,9 @@ export default function HomePage() {
       />
     );
   }
+
+  const educationItems = data.qualifications?.filter(q => q.type === 'education') || [];
+  const certificationItems = data.qualifications?.filter(q => q.type === 'certification') || [];
   
   return (
     <>
@@ -201,7 +208,7 @@ export default function HomePage() {
       
       {editMode && (
         <div className="fixed bottom-4 right-4 z-50">
-          <Button onClick={handleLogout}>Logout & Exit Edit Mode</Button>
+          <Button onClick={handleLogout}>Logout &amp; Exit Edit Mode</Button>
         </div>
       )}
 
@@ -229,8 +236,15 @@ export default function HomePage() {
             addEntry={handleAdd as any}
             deleteEntry={handleDelete as any}
         />
-        <QualificationsSection 
-            data={data.qualifications} 
+        <EducationSection 
+            data={educationItems} 
+            editMode={editMode} 
+            updateEntry={handleUpdate as any}
+            addEntry={handleAdd as any}
+            deleteEntry={handleDelete as any}
+        />
+        <CertificationsSection 
+            data={certificationItems} 
             editMode={editMode} 
             updateEntry={handleUpdate as any}
             addEntry={handleAdd as any}
