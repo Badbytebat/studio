@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Download, Upload, Loader2 } from "lucide-react";
 
@@ -14,6 +15,8 @@ type Props = {
 
 const ResumeSection: React.FC<Props> = ({ resumeUrl, editMode, onUpload, isUploading }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const motionRef = useRef(null);
+  const isInView = useInView(motionRef, { amount: 0.2 });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,7 +30,14 @@ const ResumeSection: React.FC<Props> = ({ resumeUrl, editMode, onUpload, isUploa
   };
 
   return (
-    <section id="resume" className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+    <motion.section 
+      ref={motionRef}
+      id="resume" 
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-background"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="max-w-4xl mx-auto text-center">
          <h2 className="text-3xl md:text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
           Get My Resume
@@ -64,7 +74,7 @@ const ResumeSection: React.FC<Props> = ({ resumeUrl, editMode, onUpload, isUploa
           )}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

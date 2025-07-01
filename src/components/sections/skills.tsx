@@ -1,5 +1,8 @@
+
 "use client";
 
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import type { Skill } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,12 +19,22 @@ type Props = {
 };
 
 const SkillsSection: React.FC<Props> = ({ data, editMode, updateEntry, addEntry, deleteEntry }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.2 });
+
   const handleUpdate = (id: number, field: keyof Skill, value: string | number) => {
     updateEntry('skills', id, field, value);
   };
 
   return (
-    <section id="skills" className="py-20 px-4 sm:px-6 lg:px-8">
+    <motion.section 
+      ref={ref}
+      id="skills" 
+      className="py-20 px-4 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: isInView ? 1 : 0, x: isInView ? 0 : 100 }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="max-w-4xl mx-auto text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
           My Arsenal
@@ -79,7 +92,7 @@ const SkillsSection: React.FC<Props> = ({ data, editMode, updateEntry, addEntry,
           </CardContent>
         </Card>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

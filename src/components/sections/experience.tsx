@@ -21,8 +21,8 @@ type ExperienceItemProps = {
 
 const ExperienceItem: React.FC<ExperienceItemProps> = ({ item, index, editMode, updateEntry, deleteEntry }) => {
   const ref = useRef(null);
-  // Trigger animation when the item is 30% in view, and only trigger it once
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  // Trigger animation when the item is 30% in view. Reversible.
+  const isInView = useInView(ref, { amount: 0.3 });
 
   const handleUpdate = (id: number, field: keyof Experience, value: string) => {
     updateEntry('experience', id, field, value);

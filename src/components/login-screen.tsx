@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Eye, Mail, Lock, AlertTriangle } from 'lucide-react';
 import Image from 'next/image';
-import DigitalRain from './digital-rain';
 
 type LoginScreenProps = {
   email: string;
@@ -16,7 +15,6 @@ type LoginScreenProps = {
   setPassword: (password: string) => void;
   handleSignIn: (e: React.FormEvent) => Promise<void>;
   handleViewerMode: () => void;
-  rainActive: boolean;
   batAnimation: boolean;
   isFirebaseConfigured: boolean;
 };
@@ -25,7 +23,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
   email, setEmail,
   password, setPassword,
   handleSignIn,
-  handleViewerMode, rainActive, batAnimation,
+  handleViewerMode, batAnimation,
   isFirebaseConfigured
 }) => {
   return (
@@ -91,8 +89,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
           </Button>
         </CardContent>
       </Card>
-
-      <DigitalRain isActive={rainActive} />
 
       {batAnimation && (
         <div className="fixed inset-0 z-40 pointer-events-none">

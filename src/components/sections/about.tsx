@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VenetianMask } from "lucide-react";
 import { Input } from '@/components/ui/input';
@@ -14,13 +16,22 @@ type Props = {
 };
 
 const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
-    
+    const ref = useRef(null);
+    const isInView = useInView(ref, { amount: 0.2 });
+
     const handleTextUpdate = (field: keyof AboutData, value: string) => {
         onUpdate(field, value);
     };
 
     return (
-        <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
+        <motion.section 
+            ref={ref}
+            id="about" 
+            className="py-20 px-4 sm:px-6 lg:px-8"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: isInView ? 1 : 0, x: isInView ? 0 : -100 }}
+            transition={{ duration: 0.6 }}
+        >
             <div className="max-w-4xl mx-auto text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                     About Me
@@ -58,7 +69,7 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
                     </CardContent>
                 </Card>
             </div>
-        </section>
+        </motion.section>
     )
 }
 

@@ -26,29 +26,6 @@
   transform: translate(-50%, -50%) scale(1.5);
 }
 
-/* DIGITAL RAIN ANIMATION */
-@keyframes digital-rain-fall {
-  from {
-    transform: translateY(-10vh);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(110vh);
-    opacity: 0;
-  }
-}
-
-.digital-rain-character {
-  position: fixed;
-  font-family: 'Space Grotesk', monospace;
-  font-weight: bold;
-  pointer-events: none;
-  z-index: 51; /* Above the login card and its glass effect */
-  animation: digital-rain-fall linear forwards;
-  color: hsl(var(--primary));
-  text-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent));
-}
-
 /* BAT FLYBY ANIMATION */
 @keyframes flyby {
   0% {

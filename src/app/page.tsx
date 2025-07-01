@@ -40,7 +40,6 @@ export default function HomePage() {
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(true);
   
-  const [rainActive, setRainActive] = useState(false);
   const [batAnimation, setBatAnimation] = useState(false);
 
   const { toast } = useToast();
@@ -233,7 +232,6 @@ export default function HomePage() {
   };
 
   const handleViewerMode = () => {
-    setRainActive(true);
     setBatAnimation(true);
     document.documentElement.classList.add('viewer-mode-active');
     setTimeout(() => setShowLogin(false), 1000); 
@@ -276,7 +274,6 @@ export default function HomePage() {
         setPassword={setPassword}
         handleSignIn={handleSignIn}
         handleViewerMode={handleViewerMode}
-        rainActive={rainActive}
         batAnimation={batAnimation}
         isFirebaseConfigured={isFirebaseConfigured}
       />
