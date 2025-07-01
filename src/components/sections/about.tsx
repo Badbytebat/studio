@@ -14,8 +14,8 @@ type Props = {
 };
 
 const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate }) => {
-    // Hardcode the image URL to guarantee it shows up, bypassing database issues.
-    const profileImageUrl = "https://storage.googleapis.com/maker-me/uploads/user-file-1722449553073-1.png";
+    // Hardcode the image URL to guarantee it shows up, bypassing database issues and 404 errors.
+    const profileImageUrl = "https://placehold.co/400x500.png";
 
     return (
         <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
