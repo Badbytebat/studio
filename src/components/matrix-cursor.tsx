@@ -1,21 +1,24 @@
-
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 type MatrixCursorProps = {
   darkMode: boolean;
 };
 
 const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode }) => {
+  const animationFrameId = useRef<number>();
+
   useEffect(() => {
     // Logic for Dark Mode (Matrix Trail)
     if (darkMode) {
-      const throttleTimeout = { current: null as NodeJS.Timeout | null };
       const cursorPos = { x: 0, y: 0 };
       const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+      let lastTimestamp = 0;
+      const throttleInterval = 40; // ~25fps, a good balance between effect and performance
 
       const createDarkParticle = (x: number, y: number) => {
+        if (x === 0 && y === 0) return; // Don't draw particle at initial position
         const particle = document.createElement('span');
         particle.className = 'matrix-cursor-particle';
         particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
@@ -28,21 +31,25 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode }) => {
       const handleMouseMove = (e: MouseEvent) => {
         cursorPos.x = e.clientX;
         cursorPos.y = e.clientY;
-        if (!throttleTimeout.current) {
+      };
+
+      const updateAnimation = (timestamp: number) => {
+        if (timestamp - lastTimestamp > throttleInterval) {
+          lastTimestamp = timestamp;
           createDarkParticle(cursorPos.x, cursorPos.y);
-          throttleTimeout.current = setTimeout(() => {
-            throttleTimeout.current = null;
-          }, 30);
         }
+        animationFrameId.current = requestAnimationFrame(updateAnimation);
       };
       
       window.addEventListener('mousemove', handleMouseMove);
+      // Start the animation loop
+      animationFrameId.current = requestAnimationFrame(updateAnimation);
 
       // Cleanup function specifically for dark mode
       return () => {
         window.removeEventListener('mousemove', handleMouseMove);
-        if (throttleTimeout.current) {
-          clearTimeout(throttleTimeout.current);
+        if (animationFrameId.current) {
+          cancelAnimationFrame(animationFrameId.current);
         }
         document.querySelectorAll('.matrix-cursor-particle').forEach(el => el.remove());
       };
