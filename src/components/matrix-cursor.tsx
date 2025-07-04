@@ -15,7 +15,13 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode }) => {
   useEffect(() => {
     // Logic for Dark Mode (Matrix Trail)
     if (darkMode) {
-      const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+      const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" +
+      "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン" +
+      "あいうえおかきくけこさしすせそたちつてとなにぬねの" +
+      "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ" +
+      "أبتثجحخدذرزسشصضطظعغفقكلمنهوي" +
+      "अआइईउऊऋएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह" +
+      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
       const throttleInterval = 40; // ~25fps, a good balance between effect and performance
 
        // Colors from the miui-glow-text gradient

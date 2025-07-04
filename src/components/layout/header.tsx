@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection,
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-40 px-6 py-4 flex items-center justify-between transition-colors duration-300",
+      "fixed top-0 left-0 right-0 z-40 px-8 py-4 flex items-center justify-between transition-colors duration-300",
       darkMode ? "bg-background/50 backdrop-blur-lg border-b border-white/10" : "bg-background/80 backdrop-blur-lg border-b"
     )}>
       {/* Left Side */}
