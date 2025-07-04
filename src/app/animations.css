@@ -255,7 +255,6 @@ html.viewer-mode-active, html.viewer-mode-active * {
   position: absolute;
   width: 100px;
   height: 30px;
-  background: white;
   border-radius: 9999px; /* pill shape */
   animation-name: cloud-drift;
   animation-timing-function: ease-in-out;
@@ -265,7 +264,6 @@ html.viewer-mode-active, html.viewer-mode-active * {
 .pixel-cloud::before, .pixel-cloud::after {
   content: '';
   position: absolute;
-  background: white;
   border-radius: 50%;
 }
 .pixel-cloud::before {
@@ -279,6 +277,18 @@ html.viewer-mode-active, html.viewer-mode-active * {
   height: 50px;
   top: -25px;
   right: 10px;
+}
+
+.light .pixel-cloud,
+.light .pixel-cloud::before,
+.light .pixel-cloud::after {
+  background: #e5e7eb; /* light gray */
+}
+
+.dark .pixel-cloud,
+.dark .pixel-cloud::before,
+.dark .pixel-cloud::after {
+  background: #4b5563; /* darker gray */
 }
 
 .pupil {

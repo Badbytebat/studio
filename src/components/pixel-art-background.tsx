@@ -47,7 +47,7 @@ const PixelArtBackground: React.FC<PixelArtBackgroundProps> = ({ darkMode }) => 
       ))}
 
       {clouds.map(cloud => (
-        <div key={cloud.id} className={cn("pixel-cloud", darkMode ? "opacity-20" : "opacity-10")} style={cloud.style} />
+        <div key={cloud.id} className={cn("pixel-cloud", darkMode ? "opacity-30" : "opacity-60")} style={cloud.style} />
       ))}
     </div>
   );
