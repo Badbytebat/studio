@@ -265,6 +265,8 @@ export default function HomePage() {
       {(showLogin && !user) ? (
         <motion.div
           key="login"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeInOut' } }}
           exit={{ opacity: 0, transition: { duration: 0.8, ease: 'easeInOut' } }}
         >
           <LoginScreen
@@ -281,13 +283,14 @@ export default function HomePage() {
           />
         </motion.div>
       ) : (
-        <div className={`flex min-h-screen flex-col bg-background ${darkMode ? 'dark' : 'light'}`}>
-          <motion.div
-            key="portfolio"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeInOut' } }}
-            className="flex flex-1 flex-col"
-          >
+        <motion.div
+          key="portfolio"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.8, ease: 'easeInOut' } }}
+          exit={{ opacity: 0, transition: { duration: 0.8, ease: 'easeInOut' } }}
+          className={`flex min-h-screen flex-col bg-background ${darkMode ? 'dark' : 'light'}`}
+        >
+          <div className="flex flex-1 flex-col">
             {!editMode && <MatrixCursor darkMode={darkMode} />}
             <Header 
               darkMode={darkMode}
@@ -377,8 +380,8 @@ export default function HomePage() {
               />
             </main>
             <Footer />
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
