@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Eye, Mail, Lock, AlertTriangle, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import PixelArtBackground from './pixel-art-background';
+import CelestialEye from './celestial-eye';
+
 
 type LoginScreenProps = {
   email: string;
@@ -30,7 +33,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
 }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden">
-      <div className="absolute inset-0 glass-effect opacity-40"></div>
+      <PixelArtBackground darkMode={darkMode} />
+      <CelestialEye darkMode={darkMode} />
 
       <Card className="relative z-10 w-full max-w-md bg-card/80 backdrop-blur-lg border-primary/20 shadow-xl shadow-primary/10">
         <Button 
@@ -81,7 +85,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
                   className="pl-10" disabled={!isFirebaseConfigured}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={!isFirebaseConfigured}>
+            <Button type="submit" className="w-full animate-pulse-glow" disabled={!isFirebaseConfigured}>
               Sign In
             </Button>
           </form>

@@ -206,3 +206,81 @@ html.viewer-mode-active, html.viewer-mode-active * {
 .animate-pulse-glow {
   animation: pulse-glow 4s ease-in-out infinite;
 }
+
+/* PIXEL ART LOGIN ANIMATIONS */
+@keyframes pixel-star-pulse {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes bird-fly {
+  from { transform: translateX(-10vw); }
+  to { transform: translateX(110vw); }
+}
+
+@keyframes cloud-drift {
+  from { transform: translateX(-50px); }
+  to { transform: translateX(50px); }
+}
+
+.pixel-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 5px white;
+  animation-name: pixel-star-pulse;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.pixel-bird {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #f59e0b; /* amber-500 */
+  animation-name: bird-fly;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.pixel-cloud {
+  position: absolute;
+  width: 100px;
+  height: 30px;
+  background: white;
+  border-radius: 9999px; /* pill shape */
+  animation-name: cloud-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.pixel-cloud::before, .pixel-cloud::after {
+  content: '';
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+}
+.pixel-cloud::before {
+  width: 35px;
+  height: 35px;
+  top: -15px;
+  left: 15px;
+}
+.pixel-cloud::after {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  right: 10px;
+}
+
+.pupil {
+  transition: transform 0.1s ease-out;
+}
