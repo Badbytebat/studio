@@ -3,10 +3,10 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud, Loader, AlertCircle } from "lucide-react";
+import { UploadCloud, AlertCircle } from "lucide-react";
 
 // Placeholder function to simulate a server upload
-const uploadImageToServer = async (file) => {
+const uploadImageToServer = async (file: File) => {
   console.log("Simulating upload for:", file.name);
   // Simulate network delay
   return new Promise((resolve, reject) => {
@@ -22,13 +22,13 @@ const uploadImageToServer = async (file) => {
 };
 
 export default function ProfilePicUploader() {
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState(null);
-  const fileInputRef = useRef(null);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
@@ -42,14 +42,14 @@ export default function ProfilePicUploader() {
     // Show preview immediately
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(reader.result);
+      setImagePreview(reader.result as string);
     };
     reader.readAsDataURL(file);
 
     try {
       await uploadImageToServer(file);
       // In a real app, you might set the final image URL from the server response here
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       setImagePreview(null); // Clear preview on failure
     } finally {
@@ -58,8 +58,10 @@ export default function ProfilePicUploader() {
   };
 
   const handleAreaClick = () => {
-    // Trigger the hidden file input
-    fileInputRef.current?.click();
+    // Trigger the hidden file input if not uploading
+    if (!isUploading) {
+      fileInputRef.current?.click();
+    }
   };
 
   return (
@@ -70,6 +72,7 @@ export default function ProfilePicUploader() {
         onChange={handleImageChange}
         accept="image/*"
         className="hidden"
+        disabled={isUploading}
       />
       <div
         className="relative w-48 h-48 flex items-center justify-center"
@@ -87,16 +90,18 @@ export default function ProfilePicUploader() {
             >
               <motion.div
                 className="w-full h-full rounded-full"
-                // Neon-pulsing glow animation
-                animate={{
+                // Neon-pulsing glow animation only when uploading
+                animate={isUploading ? {
                   boxShadow: [
                     "0 0 15px 2px hsl(var(--accent) / 0.5)",
                     "0 0 25px 8px hsl(var(--accent) / 0.7)",
                     "0 0 15px 2px hsl(var(--accent) / 0.5)",
                   ],
+                } : {
+                  boxShadow: "0 0 0px 0px hsl(var(--accent) / 0)"
                 }}
                 transition={{
-                  duration: 2.5,
+                  duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}

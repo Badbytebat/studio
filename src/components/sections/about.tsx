@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Upload, VenetianMask } from "lucide-react";
+import { VenetianMask } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AboutData } from '@/lib/types';
@@ -16,26 +16,12 @@ type Props = {
   data: AboutData;
   editMode: boolean;
   onUpdate: (field: keyof AboutData, value: string) => void;
-  onImageUpload: (file: File) => void;
-  isUploading: boolean;
   darkMode: boolean;
 };
 
-const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload, isUploading, darkMode }) => {
+const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, darkMode }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: false, amount: 0.2 });
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            onImageUpload(file);
-        }
-    };
-
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
 
     const handleTextUpdate = (field: keyof AboutData, value: string) => {
         onUpdate(field, value);
@@ -100,24 +86,14 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload
                           objectFit="cover"
                           className="transition-transform duration-500 group-hover:scale-105"
                       />
-                      {editMode && (
+                       {editMode && (
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            className="hidden"
-                            accept="image/png, image/jpeg, image/gif"
-                            disabled={isUploading}
-                          />
-                          <Button onClick={handleUploadClick} disabled={isUploading} variant="secondary" className="gap-2">
-                            {isUploading ? (
-                              <Loader2 className="animate-spin" />
-                            ) : (
-                              <Upload />
-                            )}
-                            {isUploading ? 'Uploading...' : 'Change Photo'}
-                          </Button>
+                           <Textarea 
+                                value={data.imageUrl} 
+                                onChange={(e) => handleTextUpdate('imageUrl', e.target.value)} 
+                                className="w-11/12 h-auto text-xs text-center bg-transparent border-dashed"
+                                placeholder="Paste new image URL here"
+                            />
                         </div>
                       )}
                     </div>
