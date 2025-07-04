@@ -228,6 +228,11 @@ export default function HomePage() {
     document.documentElement.classList.remove('viewer-mode-active');
   };
 
+  const handleReturnToLogin = () => {
+    setShowLogin(true);
+    document.documentElement.classList.remove('viewer-mode-active');
+  };
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -293,11 +298,13 @@ export default function HomePage() {
               onUpdate={handleHeaderUpdate}
             />
             
-            {editMode && (
-              <div className="fixed bottom-4 right-4 z-50">
+            <div className="fixed bottom-4 right-4 z-50">
+              {editMode ? (
                 <Button onClick={handleLogout}>Logout &amp; Exit Edit Mode</Button>
-              </div>
-            )}
+              ) : (
+                <Button onClick={handleReturnToLogin}>Login to Edit</Button>
+              )}
+            </div>
 
             <main className="flex-1">
               <HeroSection 
@@ -357,7 +364,7 @@ export default function HomePage() {
                   resumeUrl={data.resumeUrl}
                   editMode={editMode}
                   onUpload={handleResumeUpload}
-                  isUploading={isResumeUploading}
+                  isUploading={isUploading}
                   darkMode={darkMode}
               />
               <ContactSection
