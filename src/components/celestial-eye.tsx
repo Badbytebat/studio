@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useRef } from 'react';
@@ -54,7 +55,7 @@ const CelestialEye: React.FC<CelestialEyeProps> = ({ darkMode }) => {
   return (
     <div
       className={cn(
-        'absolute top-8 right-8 z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl',
+        'relative z-20 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500 shadow-2xl',
         darkMode 
             ? 'bg-gray-200 border-4 border-gray-400' 
             : 'bg-yellow-400 border-4 border-yellow-200'
