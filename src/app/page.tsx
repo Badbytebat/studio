@@ -35,6 +35,7 @@ export default function HomePage() {
   const [showLogin, setShowLogin] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [isResumeUploading, setIsResumeUploading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -176,6 +177,38 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
   
+  const handleImageUpload = async (file: File) => {
+    if (!editMode || isImageUploading) return;
+    if (!file) {
+        toast({ variant: 'destructive', title: 'Upload Failed', description: 'No file selected.'});
+        return;
+    }
+
+    setIsImageUploading(true);
+    const { id: toastId, update } = toast({ description: "Uploading profile picture..." });
+
+    try {
+        const downloadURL = await uploadFile(file, `profile-pictures/pfp_${Date.now()}_${file.name}`);
+        setData(prevData => {
+            const newAbout = { ...prevData.about, imageUrl: downloadURL };
+            const newData = { ...prevData, about: newAbout };
+            debouncedSave(newData);
+            return newData;
+        });
+        update({ id: toastId, description: "Profile picture updated successfully." });
+    } catch (error: any) {
+        console.error("Image upload failed:", error);
+        update({ 
+            id: toastId, 
+            variant: 'destructive', 
+            title: 'Upload Failed', 
+            description: error.message || 'Could not upload image. Please check the console.' 
+        });
+    } finally {
+        setIsImageUploading(false);
+    }
+  };
+  
   const handleResumeUpload = async (file: File) => {
     if (!editMode || isResumeUploading) return;
     if (!file) {
@@ -245,7 +278,7 @@ export default function HomePage() {
 
   if (authLoading || initialDataLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-background text-foreground">
+      <div className="flex h-screen w-full items-center justify-center bg-background text-foreground">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
         <p className="ml-4 text-xl">Loading Portfolio...</p>
       </div>
@@ -299,7 +332,7 @@ export default function HomePage() {
               </div>
             )}
 
-            <main className="flex-1 overflow-hidden">
+            <main className="flex-1">
               <HeroSection 
                   data={data.hero}
                   editMode={editMode}
@@ -311,6 +344,8 @@ export default function HomePage() {
                 data={data.about}
                 editMode={editMode}
                 onUpdate={handleAboutUpdate}
+                onImageUpload={handleImageUpload}
+                isUploading={isImageUploading}
                 darkMode={darkMode}
               />
               <ExperienceSection 

@@ -5,22 +5,37 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VenetianMask } from "lucide-react";
+import { Loader2, Upload, VenetianMask } from "lucide-react";
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { AboutData } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   data: AboutData;
   editMode: boolean;
   onUpdate: (field: keyof AboutData, value: string) => void;
+  onImageUpload: (file: File) => void;
+  isUploading: boolean;
   darkMode: boolean;
 };
 
-const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, darkMode }) => {
+const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, onImageUpload, isUploading, darkMode }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: false, amount: 0.2 });
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            onImageUpload(file);
+        }
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
 
     const handleTextUpdate = (field: keyof AboutData, value: string) => {
         onUpdate(field, value);
@@ -72,7 +87,7 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, darkMode }) =
                     variants={itemVariants(true)}
                 >
                     <div className={cn(
-                        "relative aspect-[4/5] w-full max-w-xs mx-auto md:max-w-none rounded-lg overflow-hidden transition-all duration-300",
+                        "relative group aspect-[4/5] w-full max-w-xs mx-auto md:max-w-none rounded-lg overflow-hidden transition-all duration-300",
                          darkMode 
                         ? "shadow-2xl shadow-accent/20 border-2 border-accent/50" 
                         : "shadow-xl"
@@ -83,8 +98,28 @@ const AboutSection: React.FC<Props> = ({ data, editMode, onUpdate, darkMode }) =
                           data-ai-hint="person portrait"
                           layout="fill"
                           objectFit="cover"
-                          className="transition-transform duration-500 hover:scale-105"
+                          className="transition-transform duration-500 group-hover:scale-105"
                       />
+                      {editMode && (
+                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
+                            accept="image/png, image/jpeg, image/gif"
+                            disabled={isUploading}
+                          />
+                          <Button onClick={handleUploadClick} disabled={isUploading} variant="secondary" className="gap-2">
+                            {isUploading ? (
+                              <Loader2 className="animate-spin" />
+                            ) : (
+                              <Upload />
+                            )}
+                            {isUploading ? 'Uploading...' : 'Change Photo'}
+                          </Button>
+                        </div>
+                      )}
                     </div>
                 </motion.div>
 
