@@ -276,7 +276,7 @@ export default function HomePage() {
           />
         </motion.div>
       ) : (
-        <div className={`flex min-h-screen flex-col bg-background overflow-x-hidden ${darkMode ? 'dark' : 'light'}`}>
+        <div className={`flex min-h-screen flex-col bg-background ${darkMode ? 'dark' : 'light'}`}>
           <motion.div
             key="portfolio"
             initial={{ opacity: 0 }}
@@ -299,7 +299,7 @@ export default function HomePage() {
               </div>
             )}
 
-            <main className="flex-1">
+            <main className="flex-1 overflow-hidden">
               <HeroSection 
                   data={data.hero}
                   editMode={editMode}

@@ -39,7 +39,7 @@ const ResumeSection: React.FC<Props> = ({ resumeUrl, editMode, onUpload, isUploa
     <motion.section 
       ref={motionRef}
       id="resume" 
-      className="py-20"
+      className="py-20 overflow-hidden"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
       transition={transition}
