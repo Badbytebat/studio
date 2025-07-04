@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useRef } from 'react';
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ContactMethod } from "@/lib/types";
 import { Github, Linkedin, Mail, Plus, Trash2, Instagram } from "lucide-react";
-import { WhatsappIcon, KaggleIcon, HackerRankIcon, GeeksforGeeksIcon } from "@/components/layout/custom-icons";
+import { WhatsappIcon, KaggleIcon, HackerRankIcon, GeeksforGeeksIcon, LeetCodeIcon } from "@/components/layout/custom-icons";
 import { cn } from '@/lib/utils';
 
 type AnimatedCardProps = {
@@ -22,7 +21,7 @@ type AnimatedCardProps = {
   darkMode: boolean;
 };
 
-// Available icons: Mail, Linkedin, Github, Instagram, Whatsapp, Kaggle, HackerRank, GeeksforGeeks
+// Available icons: Mail, Linkedin, Github, Instagram, Whatsapp, Kaggle, HackerRank, GeeksforGeeks, LeetCode
 const ICONS: { [key: string]: React.ElementType } = {
   Mail,
   Linkedin,
@@ -32,6 +31,7 @@ const ICONS: { [key: string]: React.ElementType } = {
   Kaggle: KaggleIcon,
   HackerRank: HackerRankIcon,
   GeeksforGeeks: GeeksforGeeksIcon,
+  LeetCode: LeetCodeIcon,
 };
 
 const AnimatedContactCard: React.FC<AnimatedCardProps> = ({ method, index, editMode, handleUpdate, deleteEntry, formatHref, darkMode }) => {
@@ -59,7 +59,7 @@ const AnimatedContactCard: React.FC<AnimatedCardProps> = ({ method, index, editM
         {editMode ? (
           <div className="space-y-3 text-left">
             <div>
-              <Label htmlFor={`icon-${method.id}`}>Icon Name (e.g. Mail, Whatsapp)</Label>
+              <Label htmlFor={`icon-${method.id}`}>Icon Name (e.g. Mail, LeetCode)</Label>
               <Input id={`icon-${method.id}`} value={method.icon} onChange={e => handleUpdate(method.id, 'icon', e.target.value)} />
             </div>
               <div>
