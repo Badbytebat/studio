@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection,
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-40 px-6 py-4 flex items-center transition-colors duration-300",
+      "fixed top-0 left-0 right-0 z-40 px-6 py-4 flex items-center justify-between transition-colors duration-300",
       darkMode ? "bg-background/50 backdrop-blur-lg border-b border-white/10" : "bg-background/80 backdrop-blur-lg border-b"
     )}>
       {/* Left Side */}
@@ -45,24 +45,22 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection,
       </div>
 
       {/* Center Nav */}
-      <div className="flex-grow flex justify-center">
-        <nav className="hidden lg:flex items-center gap-8">
-          {navItems.map((item) => (
-            <a
-              key={item}
-              href={`#${item}`}
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection(item);
-              }}
-              className="uppercase text-sm tracking-wider hover:text-accent transition-all relative group"
-            >
-              {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
-            </a>
-          ))}
-        </nav>
-      </div>
+      <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+        {navItems.map((item) => (
+          <a
+            key={item}
+            href={`#${item}`}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection(item);
+            }}
+            className="uppercase text-sm tracking-wider hover:text-accent transition-all relative group"
+          >
+            {item}
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
+          </a>
+        ))}
+      </nav>
 
       {/* Right Side */}
       <div className="flex-shrink-0">
