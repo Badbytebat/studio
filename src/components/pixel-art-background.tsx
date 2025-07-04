@@ -10,16 +10,26 @@ type PixelArtBackgroundProps = {
 const PixelArtBackground: React.FC<PixelArtBackgroundProps> = ({ darkMode }) => {
   // useMemo ensures that the random values are generated only once per component mount
   const { stars, birds, clouds } = useMemo(() => {
-    const starCount = Math.floor(Math.random() * 15) + 15; // Random number of stars (15-29)
-    const stars = Array.from({ length: starCount }, (_, i) => ({
-      id: `star-${i}`,
-      style: {
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 2 + 2}s`, // Speed is already random
-      }
-    }));
+    // Star randomization
+    const starCount = Math.floor(Math.random() * 20) + 20; // 20-39 stars
+    const starColors = ['white', '#FFFFE0', '#F5F5DC']; // White, LightYellow, Beige
+    
+    const stars = Array.from({ length: starCount }, (_, i) => {
+        const size = Math.random() * 2 + 2; // size between 2px and 4px
+        const color = starColors[Math.floor(Math.random() * starColors.length)];
+        return {
+          id: `star-${i}`,
+          style: {
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${size}px`,
+            height: `${size}px`,
+            boxShadow: `0 0 ${size + 2}px ${color}`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${Math.random() * 3 + 2}s`, // 2s to 5s
+          }
+        }
+    });
 
     const birdCount = Math.floor(Math.random() * 3) + 2; // Random number of birds (2-4)
     const birds = Array.from({ length: birdCount }, (_, i) => ({
@@ -27,18 +37,18 @@ const PixelArtBackground: React.FC<PixelArtBackgroundProps> = ({ darkMode }) => 
         style: {
           top: `${10 + Math.random() * 20}%`,
           animationDelay: `${i * 4 + Math.random() * 2}s`,
-          animationDuration: `${Math.random() * 8 + 8}s`, // Random speed (8s-16s)
+          animationDuration: `${Math.random() * 10 + 10}s`, // Random speed (10s-20s)
         }
     }));
     
-    const cloudCount = Math.floor(Math.random() * 4) + 3; // Random number of clouds (3-6)
+    const cloudCount = Math.floor(Math.random() * 5) + 3; // Random number of clouds (3-7)
     const clouds = Array.from({ length: cloudCount }, (_, i) => ({
       id: `cloud-${i}`,
       style: {
         top: `${15 + Math.random() * 30}%`,
         left: `${Math.random() * 100}%`,
         animationDelay: `${i * 5 + Math.random() * 4}s`,
-        animationDuration: `${Math.random() * 20 + 20}s`, // Random speed (20s-40s)
+        animationDuration: `${Math.random() * 25 + 25}s`, // Random speed (25s-50s)
       }
     }));
 
