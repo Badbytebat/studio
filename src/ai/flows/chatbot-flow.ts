@@ -10,14 +10,15 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { defaultData } from '@/lib/data';
+import type { PortfolioData } from '@/lib/types';
 
 const ChatbotInputSchema = z.object({
-  question: z.string().describe('The user\'s question about Ritesh Manandhar.'),
+  question: z.string().describe("The user's question about Ritesh Manandhar."),
+  portfolioData: z.any().describe("The portfolio data object."),
 });
 export type ChatbotInput = z.infer<typeof ChatbotInputSchema>;
 
-const ChatbotOutputSchema = z.string().describe('The chatbot\'s answer.');
+const ChatbotOutputSchema = z.string().describe("The chatbot's answer.");
 export type ChatbotOutput = z.infer<typeof ChatbotOutputSchema>;
 
 export async function chatAboutRitesh(
@@ -26,27 +27,6 @@ export async function chatAboutRitesh(
   return chatbotFlow(input);
 }
 
-// Convert the portfolio data into a string context for the LLM
-const portfolioContext = `
-  About Ritesh Manandhar:
-  - Title: ${defaultData.hero.title}
-  - Subtitle: ${defaultData.hero.subtitle}
-  - Bio: ${defaultData.about.description1} ${defaultData.about.description2} ${defaultData.about.description3}
-
-  Experience:
-  ${defaultData.experience.map(exp => `- ${exp.role} at ${exp.company} (${exp.duration}): ${exp.description}`).join('\n')}
-
-  Skills:
-  ${defaultData.skills.map(skill => `- ${skill.name} (Proficiency: ${skill.level}/100)`).join('\n')}
-
-  Projects:
-  ${defaultData.projects.map(proj => `- ${proj.title}: ${proj.description} (Technologies: ${proj.tags.join(', ')})`).join('\n')}
-
-  Education:
-  ${defaultData.qualifications.filter(q => q.type === 'education').map(edu => `- ${edu.title} from ${edu.institution} (${edu.duration})`).join('\n')}
-`;
-
-
 const chatbotFlow = ai.defineFlow(
   {
     name: 'chatbotFlow',
@@ -54,6 +34,28 @@ const chatbotFlow = ai.defineFlow(
     outputSchema: ChatbotOutputSchema,
   },
   async (input) => {
+    const data = input.portfolioData as PortfolioData;
+
+    // Convert the live portfolio data into a string context for the LLM
+    const portfolioContext = `
+      About Ritesh Manandhar:
+      - Title: ${data.hero.title}
+      - Subtitle: ${data.hero.subtitle}
+      - Bio: ${data.about.description1} ${data.about.description2} ${data.about.description3}
+
+      Experience:
+      ${data.experience.map(exp => `- ${exp.role} at ${exp.company} (${exp.duration}): ${exp.description}`).join('\n')}
+
+      Skills:
+      ${data.skills.map(skill => `- ${skill.name} (Proficiency: ${skill.level}/100)`).join('\n')}
+
+      Projects:
+      ${data.projects.map(proj => `- ${proj.title}: ${proj.description} (Technologies: ${proj.tags.join(', ')})`).join('\n')}
+
+      Education:
+      ${data.qualifications.filter(q => q.type === 'education').map(edu => `- ${edu.title} from ${edu.institution} (${edu.duration})`).join('\n')}
+    `;
+
     const { output } = await ai.generate({
       prompt: `You are a friendly and helpful chatbot on Ritesh Manandhar's personal portfolio website.
         Your goal is to answer questions about Ritesh based on the context provided below.
