@@ -79,13 +79,20 @@ const Chatbot: React.FC<Props> = ({ darkMode }) => {
       role: 'user',
       text: input,
     };
+    
+    const currentMessages = [...messages, newUserMessage];
 
-    setMessages((prev) => [...prev, newUserMessage]);
+    setMessages(currentMessages);
     setInput('');
     setIsLoading(true);
 
     try {
-      const response = await chatAboutRitesh({ question: input, portfolioData: portfolioDataRef.current });
+      // Pass the current conversation history to the AI
+      const response = await chatAboutRitesh({ 
+        question: input, 
+        portfolioData: portfolioDataRef.current,
+        history: messages // Pass existing history
+      });
       const newBotMessage: Message = {
         id: Date.now() + 1,
         role: 'bot',

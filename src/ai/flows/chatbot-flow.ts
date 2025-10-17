@@ -12,9 +12,15 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import type { PortfolioData } from '@/lib/types';
 
+const ChatMessageSchema = z.object({
+  role: z.enum(['user', 'bot']),
+  text: z.string(),
+});
+
 const ChatbotInputSchema = z.object({
-  question: z.string().describe("The user's question about Ritesh Manandhar."),
+  question: z.string().describe("The user's current question about Ritesh Manandhar."),
   portfolioData: z.any().describe("The portfolio data object."),
+  history: z.array(ChatMessageSchema).describe("The conversation history."),
 });
 export type ChatbotInput = z.infer<typeof ChatbotInputSchema>;
 
@@ -57,17 +63,23 @@ const chatbotFlow = ai.defineFlow(
       Education:
       ${data.qualifications.filter(q => q.type === 'education').map(edu => `- ${edu.title} from ${edu.institution} (${edu.duration})`).join('\n')}
     `;
+    
+    const historyContext = input.history.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.text}`).join('\n');
 
     const { output } = await ai.generate({
       prompt: `You are a friendly and helpful chatbot on Ritesh Manandhar's personal portfolio website.
         Your goal is to answer questions about Ritesh based on the context provided below.
+        Use the conversation history to understand follow-up questions.
         Keep your answers concise and conversational. If you don't know the answer from the context,
         politely say that you don't have that information. Do not make things up.
 
         Context about Ritesh:
         ${portfolioContext}
+        
+        Conversation History:
+        ${historyContext}
 
-        User's Question: "${input.question}"
+        Current User's Question: "${input.question}"
 
         Your Answer:`,
       output: {
