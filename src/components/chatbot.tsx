@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -80,18 +79,19 @@ const Chatbot: React.FC<Props> = ({ darkMode }) => {
       text: input,
     };
     
-    const currentMessages = [...messages, newUserMessage];
+    const newMessages = [...messages, newUserMessage];
 
-    setMessages(currentMessages);
+    setMessages(newMessages);
     setInput('');
     setIsLoading(true);
 
     try {
-      // Pass the current conversation history to the AI
+      const historyForAI = newMessages.map(({ id, ...re }) => re );
+      
       const response = await chatAboutRitesh({ 
         question: input, 
         portfolioData: portfolioDataRef.current,
-        history: messages // Pass existing history
+        history: historyForAI
       });
       const newBotMessage: Message = {
         id: Date.now() + 1,
