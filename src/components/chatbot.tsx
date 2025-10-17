@@ -89,7 +89,7 @@ const Chatbot: React.FC<Props> = ({ darkMode }) => {
       const newBotMessage: Message = {
         id: Date.now() + 1,
         role: 'bot',
-        text: response,
+        text: response.answer,
       };
       setMessages((prev) => [...prev, newBotMessage]);
     } catch (error) {

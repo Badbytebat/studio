@@ -18,7 +18,9 @@ const ChatbotInputSchema = z.object({
 });
 export type ChatbotInput = z.infer<typeof ChatbotInputSchema>;
 
-const ChatbotOutputSchema = z.string().describe("The chatbot's answer.");
+const ChatbotOutputSchema = z.object({
+  answer: z.string().describe("The chatbot's answer to the question."),
+});
 export type ChatbotOutput = z.infer<typeof ChatbotOutputSchema>;
 
 export async function chatAboutRitesh(
@@ -76,6 +78,6 @@ const chatbotFlow = ai.defineFlow(
       }
     });
 
-    return output!;
+    return output ?? { answer: "I'm sorry, I couldn't come up with a response. Please try asking in a different way." };
   }
 );
