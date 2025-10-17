@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRef } from 'react';
@@ -10,6 +11,7 @@ import type { ContactMethod } from "@/lib/types";
 import { Github, Linkedin, Mail, Plus, Trash2, Instagram } from "lucide-react";
 import { WhatsappIcon, KaggleIcon, HackerRankIcon, GeeksforGeeksIcon, LeetCodeIcon } from "@/components/layout/custom-icons";
 import { cn } from '@/lib/utils';
+import Chatbot from '@/components/chatbot';
 
 type AnimatedCardProps = {
   method: ContactMethod;
@@ -162,6 +164,17 @@ const ContactSection: React.FC<Props> = ({ data, editMode, updateEntry, addEntry
           </Card>
         )}
       </div>
+
+      <div className="max-w-4xl mx-auto text-center mt-20 px-4 sm:px-6 lg:px-8">
+         <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
+            transition={{ delay: 0.5, ...transition }}
+         >
+            <Chatbot darkMode={darkMode} />
+        </motion.div>
+      </div>
+
     </motion.section>
   );
 };
