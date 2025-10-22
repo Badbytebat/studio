@@ -1,8 +1,9 @@
 
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { CursorStyle } from '@/app/page';
+import { cn } from '@/lib/utils';
 
 type MatrixCursorProps = {
   darkMode: boolean;
@@ -11,115 +12,186 @@ type MatrixCursorProps = {
   style: CursorStyle;
 };
 
+const isInteractiveElement = (element: HTMLElement | null): boolean => {
+  if (!element) return false;
+  const clickableTags = ['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'];
+  const isClickable = clickableTags.includes(element.tagName) || (element.onclick !== null) || (element.style.cursor === 'pointer');
+  return isClickable || isInteractiveElement(element.parentElement);
+};
+
+
 const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color, style }) => {
   const animationFrameId = useRef<number>();
   const lastTimestamp = useRef(0);
   const cursorPos = useRef({ x: 0, y: 0 });
+  const [isInteractive, setIsInteractive] = useState(false);
 
   useEffect(() => {
     let cleanup = () => {};
 
     const handleMouseMove = (e: MouseEvent) => {
       cursorPos.current = { x: e.clientX, y: e.clientY };
+      setIsInteractive(isInteractiveElement(e.target as HTMLElement));
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Set initial state
+    setIsInteractive(isInteractiveElement(document.elementFromPoint(cursorPos.current.x, cursorPos.current.y) as HTMLElement));
 
-    // Logic for Text Cursor on interactive elements
-    if (cursorText && (style === 'matrix' || style === 'text')) {
-      const textCursor = document.createElement('span');
-      textCursor.className = 'cursor-text-label';
-      document.body.appendChild(textCursor);
-      
-      const updateTextAnimation = () => {
-        textCursor.textContent = cursorText;
-        textCursor.style.left = `${cursorPos.current.x}px`;
-        textCursor.style.top = `${cursorPos.current.y}px`;
-        textCursor.style.setProperty('--cursor-glow-color', color);
-        animationFrameId.current = requestAnimationFrame(updateTextAnimation);
-      };
-      animationFrameId.current = requestAnimationFrame(updateTextAnimation);
-      
-      cleanup = () => {
-        if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-        document.querySelectorAll('.cursor-text-label').forEach(el => el.remove());
-      };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    // Activate custom cursor if not in edit mode and a style is selected
+    if (style !== 'none') {
+        document.documentElement.classList.add('custom-cursor-active');
+    } else {
+        document.documentElement.classList.remove('custom-cursor-active');
+        return;
     }
-    // Logic for Dark Mode (Matrix Trail)
-    else if (style === 'matrix' && darkMode) {
-      const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" +
-      "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン" +
-      "あいうえおかきくけこさしすせそたちつてとなにぬねの" +
-      "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ" +
-      "أبتثجحخدذرزسشصضطظعغفقكلمنهوي" +
-      "अआइईउऊऋएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह" +
-      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-      const throttleInterval = 80;
 
-      const colors = [
-        'hsl(260, 60%, 65%)', 'hsl(var(--accent))', '#ff6b6b', '#feca57', 
-        'hsl(var(--primary))', '#48dbfb'
-      ];
-      let colorIndex = 0;
-
-      const createDarkParticle = (x: number, y: number) => {
-        if (x === 0 && y === 0) return;
-        const particle = document.createElement('span');
-        particle.className = 'matrix-cursor-particle';
-        particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+    const animate = (timestamp: number) => {
+      // General cursor position update
+      const mainCursorEl = document.getElementById('main-cursor');
+      if (mainCursorEl) {
+        mainCursorEl.style.left = `${cursorPos.current.x}px`;
+        mainCursorEl.style.top = `${cursorPos.current.y}px`;
+      }
+      
+      // Style-specific animations
+      switch(style) {
+          case 'spotlight':
+            const spotlight = document.getElementById('spotlight-overlay');
+            if (spotlight) {
+                spotlight.style.setProperty('--x', `${cursorPos.current.x}px`);
+                spotlight.style.setProperty('--y', `${cursorPos.current.y}px`);
+            }
+            break;
+          case 'matrix':
+              if (timestamp - lastTimestamp.current > 80 && !isInteractive) {
+                  lastTimestamp.current = timestamp;
+                  createMatrixParticle(cursorPos.current.x, cursorPos.current.y);
+              }
+              break;
+          case 'ghost':
+            const ghostCursors = document.querySelectorAll('.ghost-cursor');
+            ghostCursors.forEach((cursor, index) => {
+                const typedCursor = cursor as HTMLElement;
+                setTimeout(() => {
+                     typedCursor.style.left = `${cursorPos.current.x}px`;
+                     typedCursor.style.top = `${cursorPos.current.y}px`;
+                }, index * 20)
+            });
+            break;
+      }
         
-        const color = colors[colorIndex];
-        particle.style.color = color;
-        particle.style.textShadow = `0 0 5px ${color}, 0 0 10px ${color}`;
-        colorIndex = (colorIndex + 1) % colors.length;
+      animationFrameId.current = requestAnimationFrame(animate);
+    };
 
-        particle.style.left = `${x}px`;
-        particle.style.top = `${y}px`;
-        document.body.appendChild(particle);
-        particle.addEventListener('animationend', () => particle.remove());
-      };
-
-      const updateAnimation = (timestamp: number) => {
-        if (timestamp - lastTimestamp.current > throttleInterval) {
-          lastTimestamp.current = timestamp;
-          createDarkParticle(cursorPos.current.x, cursorPos.current.y);
-        }
-        animationFrameId.current = requestAnimationFrame(updateAnimation);
-      };
-      
-      animationFrameId.current = requestAnimationFrame(updateAnimation);
-
-      cleanup = () => {
+    animationFrameId.current = requestAnimationFrame(animate);
+    
+    cleanup = () => {
         if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-        document.querySelectorAll('.matrix-cursor-particle').forEach(el => el.remove());
-      };
-    } 
-    // Logic for Light Mode (Inverted Orb)
-    else if (style === 'orb' && !darkMode) {
-      const lightModeCursor = document.createElement('div');
-      lightModeCursor.className = 'light-cursor';
-      document.body.appendChild(lightModeCursor);
-      
-      const updateLightAnimation = () => {
-        lightModeCursor.style.left = `${cursorPos.current.x}px`;
-        lightModeCursor.style.top = `${cursorPos.current.y}px`;
-        animationFrameId.current = requestAnimationFrame(updateLightAnimation);
-      };
-      animationFrameId.current = requestAnimationFrame(updateLightAnimation);
-      
-      cleanup = () => {
-        if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-        document.querySelectorAll('.light-cursor').forEach(el => el.remove());
-      };
-    }
+        document.documentElement.classList.remove('custom-cursor-active');
+        document.querySelectorAll('.matrix-cursor-particle, #main-cursor, #spotlight-overlay, .ghost-cursor').forEach(el => el.remove());
+    };
+    
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cleanup();
     };
-  }, [darkMode, cursorText, color, style]);
+  }, [style, isInteractive]); // Rerun effect if style changes
+
+
+  // Effect for creating/destroying DOM elements for cursors
+  useEffect(() => {
+    // Clean up old elements
+    document.querySelectorAll('#main-cursor, #spotlight-overlay, .ghost-cursor').forEach(el => el.remove());
+    
+    if (style === 'none') return;
+    
+    let mainCursor: HTMLElement | null = null;
+    
+    // Create elements based on style
+    switch(style) {
+        case 'text':
+            mainCursor = document.createElement('span');
+            mainCursor.className = 'cursor-text-label';
+            if (isInteractive && cursorText) {
+                mainCursor.textContent = cursorText;
+                mainCursor.style.setProperty('--cursor-glow-color', color);
+            }
+            break;
+        case 'orb':
+            if (!darkMode) {
+                mainCursor = document.createElement('div');
+                mainCursor.className = 'light-cursor';
+            }
+            break;
+        case 'jello':
+             if (!darkMode) {
+                mainCursor = document.createElement('div');
+                mainCursor.className = cn('jello-cursor', isInteractive && 'interactive');
+            }
+            break;
+        case 'underline':
+             if (!darkMode) {
+                mainCursor = document.createElement('div');
+                mainCursor.className = cn('underline-cursor', isInteractive && 'interactive');
+            }
+            break;
+        case 'spotlight':
+             if (darkMode) {
+                const spotlight = document.createElement('div');
+                spotlight.id = 'spotlight-overlay';
+                spotlight.className = 'spotlight-overlay';
+                document.body.appendChild(spotlight);
+             }
+            break;
+        case 'ghost':
+            if (darkMode) {
+                for(let i = 0; i < 3; i++) {
+                    const ghost = document.createElement('div');
+                    ghost.className = 'ghost-cursor';
+                    document.body.appendChild(ghost);
+                }
+            }
+            break;
+    }
+    
+    if (mainCursor) {
+        mainCursor.id = 'main-cursor';
+        document.body.appendChild(mainCursor);
+    }
+    
+  }, [style, darkMode, isInteractive, cursorText, color])
 
   return null;
 };
+
+const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
+const colors = [
+    'hsl(260, 60%, 65%)', 'hsl(var(--accent))', '#ff6b6b', '#feca57', 
+    'hsl(var(--primary))', '#48dbfb'
+];
+let colorIndex = 0;
+
+const createMatrixParticle = (x: number, y: number) => {
+    if (x === 0 && y === 0) return;
+    const particle = document.createElement('span');
+    particle.className = 'matrix-cursor-particle';
+    particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+    
+    const color = colors[colorIndex];
+    particle.style.color = color;
+    particle.style.textShadow = `0 0 5px ${color}, 0 0 10px ${color}`;
+    colorIndex = (colorIndex + 1) % colors.length;
+
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+    document.body.appendChild(particle);
+    particle.addEventListener('animationend', () => particle.remove());
+};
+
 
 export default MatrixCursor;
 

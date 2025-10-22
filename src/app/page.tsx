@@ -28,13 +28,14 @@ import ProjectRecommender from '@/components/sections/project-recommender';
 import FloatingChatbot from '@/components/floating-chatbot';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CursorSelector from '@/components/cursor-selector';
+import FloatingCursorSelector from '@/components/floating-cursor-selector';
 
-export type CursorStyle = 'matrix' | 'text' | 'orb' | 'none';
+export type CursorStyle = 'matrix' | 'text' | 'orb' | 'none' | 'spotlight' | 'ghost' | 'jello' | 'underline';
+
 
 const SELECTION_WORDS = [
   "Select", "Elegir", "Choisir", "Wählen", "選択", "선택", "选择", "Выбрать", "Selezionare", "Kies",
-  "ചुनें", "تحديد", "בחירה", "Valitse", "Velg", "Vælg", "Selecione", "Seç", "เลือก"
+  "ചुनें", "تحديد", "בחירה", "Valitse", "Velg", "Vælg", "Selecione", "Seç", "เลือก", "kies", "zgjidhni", "ይምረጡ", "يختار", "ընտրել", "চয়ন কৰা", "seçin", "নির্বাচন করুন", "izaberite", "изберете", "seleccionar", "选择", "選擇", "izabrati", "vybrat", "vælge", "selecteren", "select", "vali", "valita", "sélectionner", "აირჩიე", "auswählen", "επιλέγω", "પસંદ કરો", "chwazi", "בחר", "चयन करें", "kiválaszt", "velja", "pilih", "selezionare", "選択する", "ಆಯ್ಕೆಮಾಡಿ", "таңдаңыз", "선택하다", "izvēlēties", "pasirinkti", "избери", "pilih", "agħżel", "निवडा", "сонгох", "चयन गर्नुहोस्", "velge", "انتخاب کنید", "wybierz", "selecionar", "ਚੁਣੋ", "selectați", "выбрать", "изаберите", "vybrať", "izberite", "seleccionar", "chagua", "välj", "தேர்வு செய்யவும்", "ఎంచుకోండి", "seçmek", "вибрати", "منتخب کریں", "chọn", "dewiswch"
 ];
 
 const CURSOR_COLORS = [
@@ -124,17 +125,13 @@ export default function HomePage() {
 
     // Activate custom cursor if not in edit mode and a style is selected
     if (!editMode && cursorStyle !== 'none') {
-      document.documentElement.classList.add('custom-cursor-active');
       window.addEventListener('mouseover', handleMouseOver);
       window.addEventListener('mouseout', handleMouseOut);
-    } else {
-      document.documentElement.classList.remove('custom-cursor-active');
     }
     
     return () => {
         window.removeEventListener('mouseover', handleMouseOver);
         window.removeEventListener('mouseout', handleMouseOut);
-        document.documentElement.classList.remove('custom-cursor-active');
     }
   }, [editMode, darkMode, cursorStyle]);
 
@@ -323,14 +320,12 @@ export default function HomePage() {
   
   return (
     <>
-      {!editMode && cursorStyle !== 'none' && (
-        <MatrixCursor 
+      <MatrixCursor 
           darkMode={darkMode} 
           cursorText={cursorText} 
           color={cursorColor} 
           style={cursorStyle} 
         />
-      )}
       <AnimatePresence mode="wait">
         {(showLogin && !user) ? (
           <motion.div
@@ -448,14 +443,14 @@ export default function HomePage() {
                     deleteEntry={handleDelete as any}
                     darkMode={darkMode}
                 />
-                <CursorSelector
-                  darkMode={darkMode}
-                  selectedStyle={cursorStyle}
-                  onStyleChange={setCursorStyle}
-                />
               </main>
               <Footer />
               <FloatingChatbot darkMode={darkMode} portfolioData={data} />
+              <FloatingCursorSelector 
+                darkMode={darkMode} 
+                selectedStyle={cursorStyle} 
+                onStyleChange={setCursorStyle} 
+              />
             </div>
           </motion.div>
         )}
@@ -463,5 +458,7 @@ export default function HomePage() {
     </>
   );
 }
+
+    
 
     
