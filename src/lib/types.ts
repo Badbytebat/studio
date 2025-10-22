@@ -1,3 +1,4 @@
+
 export interface Experience {
   id: number;
   role: string;
@@ -53,6 +54,13 @@ export interface AboutData {
   description1: string;
   description2: string;
   description3: string;
+}
+
+export interface ContactForm {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
 }
 
 export interface PortfolioData {
