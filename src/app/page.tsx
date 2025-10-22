@@ -97,26 +97,30 @@ export default function HomePage() {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (isInteractive(target)) {
-        document.documentElement.classList.remove('custom-cursor-active');
         wordIndexRef.current = (wordIndexRef.current + 1) % SELECTION_WORDS.length;
         setCursorText(SELECTION_WORDS[wordIndexRef.current]);
       } else {
-        document.documentElement.classList.add('custom-cursor-active');
         setCursorText('');
       }
+    };
+    
+    const handleMouseOut = () => {
+        setCursorText('');
     };
 
     if (editMode) {
       document.documentElement.classList.remove('custom-cursor-active');
-      setCursorText('');
       window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mouseout', handleMouseOut);
     } else {
       document.documentElement.classList.add('custom-cursor-active');
       window.addEventListener('mouseover', handleMouseOver);
+      window.addEventListener('mouseout', handleMouseOut);
     }
     
     return () => {
         window.removeEventListener('mouseover', handleMouseOver);
+        window.removeEventListener('mouseout', handleMouseOut);
         document.documentElement.classList.remove('custom-cursor-active');
     }
   }, [editMode]);
