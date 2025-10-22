@@ -2,12 +2,20 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, LayoutDashboard } from 'lucide-react';
 import LogoIcon from './logo-icon';
 import type { HeaderData } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Menu } from 'lucide-react';
 
 type HeaderProps = {
   darkMode: boolean;
@@ -16,15 +24,16 @@ type HeaderProps = {
   headerData: HeaderData;
   editMode: boolean;
   onUpdate: (field: keyof HeaderData, value: string) => void;
+  isLoggedIn: boolean;
 };
 
-const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection, headerData, editMode, onUpdate }) => {
+const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection, headerData, editMode, onUpdate, isLoggedIn }) => {
   const navItems = ['about', 'experience', 'skills', 'projects', 'education', 'certifications', 'resume', 'contact'];
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-40 px-8 py-4 flex items-center justify-between transition-colors duration-300",
-      darkMode ? "bg-background/50 backdrop-blur-lg border-b border-white/10" : "bg-background/80 backdrop-blur-lg border-b"
+      "fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 py-4 flex items-center justify-between transition-all duration-300",
+      "bg-background/50 backdrop-blur-lg border-b border-white/10"
     )}>
       {/* Left Side */}
       <div className="flex-shrink-0">
@@ -44,29 +53,37 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection,
         </a>
       </div>
 
-      {/* Center Nav */}
-      <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-        {navItems.map((item) => (
-          <a
-            key={item}
-            href={`#${item}`}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection(item);
-            }}
-            className="uppercase text-sm tracking-wider hover:text-accent transition-all relative group"
-          >
-            {item}
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-300"></span>
-          </a>
-        ))}
-      </nav>
+      {/* Center Nav - Dropdown */}
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="glass-effect px-4 py-2">
+              <Menu className="w-5 h-5 mr-2" />
+              Navigate
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="glass-effect">
+            {navItems.map((item) => (
+              <DropdownMenuItem key={item} onSelect={() => scrollToSection(item)} className="cursor-pointer">
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      
 
       {/* Right Side */}
-      <div className="flex-shrink-0">
-        <Button onClick={() => setDarkMode(!darkMode)} variant="ghost" size="icon" className="hover:bg-accent/20 transition-all">
+      <div className="flex items-center gap-2">
+        {isLoggedIn && (
+           <Link href="/dashboard" passHref>
+            <Button variant="ghost" size="icon" className="hover:bg-accent/20 transition-all" aria-label="Dashboard">
+                <LayoutDashboard className="h-5 w-5" />
+            </Button>
+           </Link>
+        )}
+        <Button onClick={() => setDarkMode(!darkMode)} variant="ghost" size="icon" className="hover:bg-accent/20 transition-all" aria-label="Toggle theme">
           {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          <span className="sr-only">Toggle theme</span>
         </Button>
       </div>
     </header>

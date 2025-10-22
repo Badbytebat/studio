@@ -80,12 +80,35 @@ export default function HomePage() {
 
   // Handle custom cursor visibility based on edit mode
   useEffect(() => {
+    const isInteractive = (element: HTMLElement | null): boolean => {
+      if (!element) return false;
+      const clickableTags = ['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'];
+      const isClickable = clickableTags.includes(element.tagName) || (element.onclick !== null) || (element.style.cursor === 'pointer');
+      return isClickable || isInteractive(element.parentElement);
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (isInteractive(target)) {
+        document.documentElement.classList.remove('custom-cursor-active');
+      } else {
+        document.documentElement.classList.add('custom-cursor-active');
+      }
+    };
+
     if (editMode) {
       document.documentElement.classList.remove('custom-cursor-active');
+      window.removeEventListener('mouseover', handleMouseOver);
     } else {
       document.documentElement.classList.add('custom-cursor-active');
+      window.addEventListener('mouseover', handleMouseOver);
+    }
+    
+    return () => {
+        window.removeEventListener('mouseover', handleMouseOver);
     }
   }, [editMode]);
+
 
   const debouncedSave = useDebouncedCallback(async (newData: Partial<PortfolioData>) => {
     if (!editMode) return;
@@ -308,6 +331,7 @@ export default function HomePage() {
                 headerData={data.header}
                 editMode={editMode}
                 onUpdate={handleHeaderUpdate}
+                isLoggedIn={!!user}
               />
               
               <div className="fixed bottom-4 left-4 z-50">
