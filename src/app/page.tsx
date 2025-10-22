@@ -102,6 +102,8 @@ export default function HomePage() {
     };
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (!darkMode) return; // Only show text cursor in dark mode
+      
       const target = e.target as HTMLElement;
       if (isInteractive(target)) {
         wordIndexRef.current = (wordIndexRef.current + 1) % SELECTION_WORDS.length;
@@ -115,6 +117,7 @@ export default function HomePage() {
     };
     
     const handleMouseOut = () => {
+        if (!darkMode) return;
         setCursorText('');
     };
 
@@ -133,7 +136,7 @@ export default function HomePage() {
         window.removeEventListener('mouseout', handleMouseOut);
         document.documentElement.classList.remove('custom-cursor-active');
     }
-  }, [editMode]);
+  }, [editMode, darkMode]);
 
 
   const debouncedSave = useDebouncedCallback(async (newData: Partial<PortfolioData>) => {
@@ -427,7 +430,7 @@ export default function HomePage() {
                     resumeUrl={data.resumeUrl}
                     editMode={editMode}
                     onUpload={handleResumeUpload}
-                    isUploading={isResumeUploading}
+                    isUploading={isUploading}
                     darkMode={darkMode}
                 />
                 <ContactSection

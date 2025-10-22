@@ -22,8 +22,8 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
     };
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Logic for Text Cursor (when cursorText is provided)
-    if (cursorText) {
+    // Logic for Text Cursor (when cursorText is provided in dark mode)
+    if (cursorText && darkMode) {
       const textCursor = document.createElement('span');
       textCursor.className = 'cursor-text-label';
       document.body.appendChild(textCursor);
