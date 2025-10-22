@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, from 'react';
 import type { PortfolioData, Qualification, HeaderData, AboutData, HeroData } from '@/lib/types';
 import { defaultData } from '@/lib/data';
 import { getPortfolioData, savePortfolioData } from '@/lib/firestore';
@@ -42,25 +42,25 @@ const CURSOR_COLORS = [
 export default function HomePage() {
   const { user, loading: authLoading, signIn, signOut } = useAuth();
   
-  const [data, setData] = useState<PortfolioData>(defaultData);
-  const [initialDataLoading, setInitialDataLoading] = useState(true);
-  const [showLogin, setShowLogin] = useState(true);
-  const [editMode, setEditMode] = useState(false);
-  const [isResumeUploading, setIsResumeUploading] = useState(false);
-  const [cursorText, setCursorText] = useState('');
-  const [cursorColor, setCursorColor] = useState(CURSOR_COLORS[0]);
+  const [data, setData] = React.useState<PortfolioData>(defaultData);
+  const [initialDataLoading, setInitialDataLoading] = React.useState(true);
+  const [showLogin, setShowLogin] = React.useState(true);
+  const [editMode, setEditMode] = React.useState(false);
+  const [isResumeUploading, setIsResumeUploading] = React.useState(false);
+  const [cursorText, setCursorText] = React.useState('');
+  const [cursorColor, setCursorColor] = React.useState(CURSOR_COLORS[0]);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [darkMode, setDarkMode] = useState(true);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [darkMode, setDarkMode] = React.useState(true);
   
   const { toast } = useToast();
   const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'CHANGEME';
-  const wordIndexRef = useRef(0);
-  const colorIndexRef = useRef(0);
+  const wordIndexRef = React.useRef(0);
+  const colorIndexRef = React.useRef(0);
 
   // Fetch initial data
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
       setInitialDataLoading(true);
       try {
@@ -80,7 +80,7 @@ export default function HomePage() {
   }, [toast]);
   
   // Handle auth state changes
-  useEffect(() => {
+  React.useEffect(() => {
     if (!authLoading) {
       if (user) {
         setEditMode(true);
@@ -93,7 +93,7 @@ export default function HomePage() {
   }, [user, authLoading, toast]);
 
   // Handle custom cursor visibility based on edit mode
-  useEffect(() => {
+  React.useEffect(() => {
     const isInteractive = (element: HTMLElement | null): boolean => {
       if (!element) return false;
       const clickableTags = ['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'];
@@ -123,8 +123,6 @@ export default function HomePage() {
 
     if (editMode) {
       document.documentElement.classList.remove('custom-cursor-active');
-      window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('mouseout', handleMouseOut);
     } else {
       document.documentElement.classList.add('custom-cursor-active');
       window.addEventListener('mouseover', handleMouseOver);
@@ -149,7 +147,7 @@ export default function HomePage() {
     }
   }, 1500);
 
-  const handleUpdate = useCallback(<K extends keyof PortfolioData>(
+  const handleUpdate = React.useCallback(<K extends keyof PortfolioData>(
     section: K,
     id: number,
     field: string,
@@ -166,7 +164,7 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
   
-  const handleAdd = useCallback(<K extends keyof PortfolioData>(
+  const handleAdd = React.useCallback(<K extends keyof PortfolioData>(
     section: K,
     itemType?: 'education' | 'certification'
   ) => {
@@ -200,7 +198,7 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
 
-  const handleDelete = useCallback(<K extends keyof PortfolioData>(section: K, id: number) => {
+  const handleDelete = React.useCallback(<K extends keyof PortfolioData>(section: K, id: number) => {
     setData(prevData => {
         const sectionData = prevData[section] as any[];
         const updatedSectionData = sectionData.filter(item => item.id !== id);
@@ -210,7 +208,7 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
   
-  const handleHeaderUpdate = useCallback((field: keyof HeaderData, value: string) => {
+  const handleHeaderUpdate = React.useCallback((field: keyof HeaderData, value: string) => {
     setData(prevData => {
         const newHeader = { ...prevData.header, [field]: value };
         debouncedSave({ header: newHeader });
@@ -218,7 +216,7 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
 
-  const handleHeroUpdate = useCallback((field: keyof HeroData, value: string) => {
+  const handleHeroUpdate = React.useCallback((field: keyof HeroData, value: string) => {
     setData(prevData => {
         const newHero = { ...prevData.hero, [field]: value };
         debouncedSave({ hero: newHero });
@@ -226,7 +224,7 @@ export default function HomePage() {
     });
   }, [debouncedSave]);
 
-  const handleAboutUpdate = useCallback((field: keyof AboutData, value: string) => {
+  const handleAboutUpdate = React.useCallback((field: keyof AboutData, value: string) => {
     setData(prevData => {
         const newAbout = { ...prevData.about, [field]: value };
         debouncedSave({ about: newAbout });
@@ -304,7 +302,7 @@ export default function HomePage() {
     }
   };
   
-  useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
     document.documentElement.classList.toggle('light', !darkMode);
   }, [darkMode]);
@@ -430,7 +428,7 @@ export default function HomePage() {
                     resumeUrl={data.resumeUrl}
                     editMode={editMode}
                     onUpload={handleResumeUpload}
-                    isUploading={isUploading}
+                    isUploading={isResumeUploading}
                     darkMode={darkMode}
                 />
                 <ContactSection
