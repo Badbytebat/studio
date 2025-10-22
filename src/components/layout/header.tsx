@@ -1,20 +1,13 @@
+
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sun, Moon } from 'lucide-react';
 import LogoIcon from './logo-icon';
 import type { HeaderData } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Menu } from 'lucide-react';
 
 type HeaderProps = {
   darkMode: boolean;
@@ -52,26 +45,15 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode, scrollToSection,
         </a>
       </div>
 
-      {/* Center Nav - Dropdown */}
-      <div className="absolute left-1/2 -translate-x-1/2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="glass-effect px-4 py-2">
-              <Menu className="w-5 h-5 mr-2" />
-              Navigate
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="glass-effect">
-            {navItems.map((item) => (
-              <DropdownMenuItem key={item} onSelect={() => scrollToSection(item)} className="cursor-pointer">
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {/* Center Nav - Hidden on small screens */}
+      <nav className="hidden md:flex items-center gap-2">
+        {navItems.map((item) => (
+          <Button key={item} onClick={() => scrollToSection(item)} variant="ghost" className="glass-effect capitalize">
+            <span className="pointer-events-none">{item}</span>
+          </Button>
+        ))}
+      </nav>
       
-
       {/* Right Side */}
       <div className="flex items-center gap-2">
         <Button onClick={() => setDarkMode(!darkMode)} variant="ghost" size="icon" className="hover:bg-accent/20 transition-all" aria-label="Toggle theme">
