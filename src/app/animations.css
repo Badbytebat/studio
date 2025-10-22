@@ -1,3 +1,4 @@
+
 /* DARK MODE - GOTHAM ANIMATIONS */
 .dark .glass-effect {
   background: rgba(255, 255, 255, 0.05);
@@ -68,6 +69,24 @@ html.custom-cursor-active, html.custom-cursor-active * {
     opacity: 0;
     transform: translate(-50%, -50%) translateY(30px); /* Fall down slightly */
   }
+}
+
+/* CURSOR TEXT LABEL */
+.cursor-text-label {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  background: black;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  pointer-events: none;
+  z-index: 9999;
+  user-select: none;
+  text-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent));
+  transition: all 0.1s ease-out;
 }
 
 /* --- LIGHT MODE ANIMATIONS --- */

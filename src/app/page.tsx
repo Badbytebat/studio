@@ -29,6 +29,10 @@ import FloatingChatbot from '@/components/floating-chatbot';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+const SELECTION_WORDS = [
+  "Select", "Elegir", "Choisir", "Wählen", "選択", "선택", "选择", "Выбрать", "Selezionare", "Kies"
+];
+
 export default function HomePage() {
   const { user, loading: authLoading, signIn, signOut } = useAuth();
   
@@ -37,6 +41,7 @@ export default function HomePage() {
   const [showLogin, setShowLogin] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [isResumeUploading, setIsResumeUploading] = useState(false);
+  const [cursorText, setCursorText] = useState('');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +49,7 @@ export default function HomePage() {
   
   const { toast } = useToast();
   const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'CHANGEME';
+  let wordIndex = 0;
 
   // Fetch initial data
   useEffect(() => {
@@ -91,13 +97,17 @@ export default function HomePage() {
       const target = e.target as HTMLElement;
       if (isInteractive(target)) {
         document.documentElement.classList.remove('custom-cursor-active');
+        wordIndex = (wordIndex + 1) % SELECTION_WORDS.length;
+        setCursorText(SELECTION_WORDS[wordIndex]);
       } else {
         document.documentElement.classList.add('custom-cursor-active');
+        setCursorText('');
       }
     };
 
     if (editMode) {
       document.documentElement.classList.remove('custom-cursor-active');
+      setCursorText('');
       window.removeEventListener('mouseover', handleMouseOver);
     } else {
       document.documentElement.classList.add('custom-cursor-active');
@@ -294,7 +304,7 @@ export default function HomePage() {
   
   return (
     <>
-      {!editMode && <MatrixCursor darkMode={darkMode} />}
+      {!editMode && <MatrixCursor darkMode={darkMode} cursorText={cursorText} />}
       <AnimatePresence mode="wait">
         {(showLogin && !user) ? (
           <motion.div
@@ -401,7 +411,7 @@ export default function HomePage() {
                     resumeUrl={data.resumeUrl}
                     editMode={editMode}
                     onUpload={handleResumeUpload}
-                    isUploading={isResumeUploading}
+                    isUploading={isUploading}
                     darkMode={darkMode}
                 />
                 <ContactSection
