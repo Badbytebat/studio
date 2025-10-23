@@ -8,6 +8,7 @@ import { getPortfolioData, savePortfolioData } from '@/lib/firestore';
 import { useAuth } from '@/context/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { uploadFile } from '@/lib/storage';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -63,6 +64,7 @@ export default function HomePage() {
   const isFirebaseConfigured = process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_API_KEY !== 'CHANGEME';
   const wordIndexRef = React.useRef(0);
   const colorIndexRef = React.useRef(0);
+  const isMobile = useIsMobile();
 
   // Fetch initial data
   React.useEffect(() => {
@@ -446,11 +448,13 @@ export default function HomePage() {
               </main>
               <Footer />
               <FloatingChatbot darkMode={darkMode} portfolioData={data} />
-              <FloatingCursorSelector 
-                darkMode={darkMode} 
-                selectedStyle={cursorStyle} 
-                onStyleChange={setCursorStyle} 
-              />
+              {!isMobile && (
+                <FloatingCursorSelector 
+                  darkMode={darkMode} 
+                  selectedStyle={cursorStyle} 
+                  onStyleChange={setCursorStyle} 
+                />
+              )}
             </div>
           </motion.div>
         )}
