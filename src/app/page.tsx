@@ -30,7 +30,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FloatingCursorSelector from '@/components/floating-cursor-selector';
 
-export type CursorStyle = 'matrix' | 'text' | 'orb' | 'ghost' | 'jello' | 'underline' | 'ink_bloom' | 'airflow' | 'glitch' | 'starlight' | 'none';
+export type CursorStyle = 'matrix' | 'text' | 'orb' | 'ghost' | 'jello' | 'underline' | 'ink_bloom' | 'aurora' | 'circuit_pulse' | 'starlight' | 'none';
 
 
 const SELECTION_WORDS = [
@@ -458,8 +458,3 @@ export default function HomePage() {
     </>
   );
 }
-
-    
-
-    
-

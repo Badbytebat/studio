@@ -18,7 +18,7 @@ type StyleOption = {
 const darkStyles: StyleOption[] = [
   { style: 'matrix', name: 'Matrix', icon: Wand },
   { style: 'ghost', name: 'Ghost', icon: Ghost },
-  { style: 'glitch', name: 'Glitch', icon: Bot },
+  { style: 'circuit_pulse', name: 'Circuit Pulse', icon: Bot },
   { style: 'starlight', name: 'Starlight', icon: Sparkles },
   { style: 'none', name: 'None', icon: X },
 ];
@@ -28,7 +28,7 @@ const lightStyles: StyleOption[] = [
   { style: 'jello', name: 'Jello', icon: Waves },
   { style: 'underline', name: 'Underline', icon: Sparkles },
   { style: 'ink_bloom', name: 'Ink Bloom', icon: Palette },
-  { style: 'airflow', name: 'Airflow', icon: Wind },
+  { style: 'aurora', name: 'Aurora', icon: Wind },
   { style: 'none', name: 'None', icon: X },
 ];
 

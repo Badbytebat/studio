@@ -49,7 +49,7 @@ html.custom-cursor-active, html.custom-cursor-active * {
 }
 
 /* CURSOR-RELATED ANIMATIONS */
-.cursor-text-label, .matrix-cursor-particle, .light-cursor, .ghost-cursor, .jello-cursor, .underline-cursor, .ink-bloom-particle, .airflow-particle, .glitch-cursor, .starlight-cursor-wrap {
+.cursor-text-label, .matrix-cursor-particle, .light-cursor, .ghost-cursor, .jello-cursor, .underline-cursor, .ink-bloom-particle, .aurora-particle, .circuit-pulse-particle, .starlight-cursor-wrap {
     position: fixed;
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -219,59 +219,53 @@ html.custom-cursor-active, html.custom-cursor-active * {
   }
 }
 
-/* AIRFLOW CURSOR */
-.airflow-particle {
-  width: 50px;
-  height: 2px;
-  border-radius: 1px;
-  background: linear-gradient(to right, transparent, rgba(127, 199, 255, 0.5), transparent);
-  animation: airflow-fade 1s ease-out forwards;
+/* AURORA CURSOR */
+#aurora-cursor-base {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #fbc2eb, #a6c1ee, #fdcbf1);
+    box-shadow: 0 0 8px #a6c1ee, 0 0 12px #fbc2eb;
+    animation: aurora-gradient 5s ease-in-out infinite;
+    background-size: 200% 200%;
 }
-.airflow-particle.interactive {
-  animation: airflow-swirl 0.5s ease-out forwards;
+@keyframes aurora-gradient {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+.aurora-particle {
+  border-radius: 50%;
+  animation: aurora-fade-out 1s ease-out forwards;
+}
+@keyframes aurora-fade-out {
+  from { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%,-50%) scale(0); }
 }
 
-@keyframes airflow-fade {
+
+/* CIRCUIT PULSE CURSOR */
+#circuit-pulse-base {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #00ffff;
+    box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+.circuit-pulse-particle {
+    border-radius: 50%;
+    border: 2px solid #00ffff;
+    animation: circuit-pulse-animation 0.7s ease-out forwards;
+}
+@keyframes circuit-pulse-animation {
   from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scaleX(0.5);
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(0);
   }
   to {
     opacity: 0;
-    transform: translate(50%, -50%) scaleX(1);
+    transform: translate(-50%, -50%) scale(1.5);
   }
-}
-@keyframes airflow-swirl {
-  0% { transform: scale(0.5) rotate(0deg); opacity: 1;}
-  100% { transform: scale(1.2) rotate(180deg); opacity: 0;}
-}
-
-/* DIGITAL GLITCH CURSOR */
-@keyframes glitch-effect {
-  0%, 100% { clip-path: inset(0 0 0 0); }
-  10% { clip-path: inset(45% 0 45% 0); }
-  20% { clip-path: inset(60% 0 10% 0); }
-  40% { clip-path: inset(20% 0 70% 0); }
-  60% { clip-path: inset(80% 0 5% 0); }
-  80% { clip-path: inset(5% 0 80% 0); }
-}
-.glitch-cursor {
-  width: 24px;
-  height: 24px;
-  background-color: transparent;
-}
-.glitch-cursor div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: hsl(var(--accent));
-  animation: glitch-effect 0.4s infinite;
-}
-.glitch-cursor .glitch-layer-2 {
-  background: #ff6b6b;
-  animation-delay: -0.2s;
 }
 
 /* STARLIGHT ORBIT CURSOR */

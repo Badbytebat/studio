@@ -25,6 +25,7 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
   const lastTimestamp = useRef(0);
   const cursorPos = useRef({ x: 0, y: 0 });
   const [isInteractive, setIsInteractive] = useState(false);
+  const isMouseDown = useRef(false);
 
   useEffect(() => {
     let cleanup = () => {};
@@ -33,12 +34,17 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
       cursorPos.current = { x: e.clientX, y: e.clientY };
       setIsInteractive(isInteractiveElement(e.target as HTMLElement));
     };
+
+    const handleMouseDown = () => { isMouseDown.current = true; };
+    const handleMouseUp = () => { isMouseDown.current = false; };
     
     // Set initial state
     setIsInteractive(isInteractiveElement(document.elementFromPoint(cursorPos.current.x, cursorPos.current.y) as HTMLElement));
 
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     // Activate custom cursor if not in edit mode and a style is selected
     if (style !== 'none') {
@@ -80,10 +86,16 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
                 createInkBloomParticle(cursorPos.current.x, cursorPos.current.y);
             }
             break;
-        case 'airflow':
+        case 'aurora':
              if (timestamp - lastTimestamp.current > 50) {
                 lastTimestamp.current = timestamp;
-                createAirflowParticle(cursorPos.current.x, cursorPos.current.y, isInteractive);
+                createAuroraParticle(cursorPos.current.x, cursorPos.current.y, isMouseDown.current);
+            }
+            break;
+        case 'circuit_pulse':
+             if (timestamp - lastTimestamp.current > 100) {
+                lastTimestamp.current = timestamp;
+                createCircuitPulseParticle(cursorPos.current.x, cursorPos.current.y, isMouseDown.current);
             }
             break;
         case 'starlight':
@@ -91,6 +103,11 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
             if (starlightWrap) {
                 starlightWrap.style.left = `${cursorPos.current.x}px`;
                 starlightWrap.style.top = `${cursorPos.current.y}px`;
+                if (isMouseDown.current) {
+                    starlightWrap.classList.add('clicked');
+                } else {
+                    starlightWrap.classList.remove('clicked');
+                }
             }
             break;
       }
@@ -103,12 +120,14 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
     cleanup = () => {
         if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
         document.documentElement.classList.remove('custom-cursor-active');
-        document.querySelectorAll('.matrix-cursor-particle, #main-cursor, .ghost-cursor, .ink-bloom-particle, .airflow-particle, .glitch-cursor, #starlight-cursor-wrap').forEach(el => el.remove());
+        document.querySelectorAll('.matrix-cursor-particle, #main-cursor, .ghost-cursor, .ink-bloom-particle, .aurora-particle, .circuit-pulse-particle, #starlight-cursor-wrap').forEach(el => el.remove());
     };
     
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       cleanup();
     };
   }, [style, isInteractive]); // Rerun effect if style changes
@@ -117,7 +136,7 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
   // Effect for creating/destroying DOM elements for cursors
   useEffect(() => {
     // Clean up old elements
-    document.querySelectorAll('#main-cursor, .ghost-cursor, #starlight-cursor-wrap, .glitch-cursor').forEach(el => el.remove());
+    document.querySelectorAll('#main-cursor, .ghost-cursor, #starlight-cursor-wrap').forEach(el => el.remove());
     
     if (style === 'none') return;
     
@@ -166,15 +185,16 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({ darkMode, cursorText, color
                 document.body.appendChild(ghost);
             }
             break;
-        case 'glitch':
-             if (darkMode) {
+        case 'aurora':
+             if (!darkMode) {
                 mainCursor = document.createElement('div');
-                mainCursor.className = 'glitch-cursor';
-                const layer1 = document.createElement('div');
-                const layer2 = document.createElement('div');
-                layer2.className = 'glitch-layer-2';
-                mainCursor.appendChild(layer1);
-                mainCursor.appendChild(layer2);
+                mainCursor.id = 'aurora-cursor-base';
+            }
+            break;
+        case 'circuit_pulse':
+            if (darkMode) {
+                mainCursor = document.createElement('div');
+                mainCursor.id = 'circuit-pulse-base';
             }
             break;
         case 'starlight':
@@ -245,12 +265,46 @@ const createInkBloomParticle = (x: number, y: number) => {
     particle.addEventListener('animationend', () => particle.remove());
 };
 
-const createAirflowParticle = (x: number, y: number, isInteractive: boolean) => {
+const auroraGradients = [
+    'linear-gradient(45deg, #fbc2eb, #a6c1ee)',
+    'linear-gradient(45deg, #fdcbf1, #e6dee9)',
+    'linear-gradient(45deg, #a1c4fd, #c2e9fb)',
+];
+let auroraColorIndex = 0;
+const createAuroraParticle = (x: number, y: number, isClicked: boolean) => {
     const particle = document.createElement('div');
-    particle.className = cn('airflow-particle', isInteractive && 'interactive');
+    particle.className = 'aurora-particle';
+    const size = Math.random() * 15 + 8;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Cycle through gradients
+    if (Math.random() > 0.9) {
+      auroraColorIndex = (auroraColorIndex + 1) % auroraGradients.length;
+    }
+    particle.style.background = auroraGradients[auroraColorIndex];
+    particle.style.opacity = isClicked ? '1' : '0.7';
+
+    particle.style.left = `${x + (Math.random() - 0.5) * 30}px`;
+    particle.style.top = `${y + (Math.random() - 0.5) * 30}px`;
+    document.body.appendChild(particle);
+    particle.addEventListener('animationend', () => particle.remove());
+};
+
+const createCircuitPulseParticle = (x: number, y: number, isClicked: boolean) => {
+    const particle = document.createElement('div');
+    particle.className = 'circuit-pulse-particle';
+    const size = isClicked ? Math.random() * 50 + 40 : Math.random() * 30 + 20;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
     particle.style.left = `${x}px`;
     particle.style.top = `${y}px`;
-    particle.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+    if(isClicked) {
+        particle.style.animationDuration = '0.5s';
+        particle.style.borderColor = '#99ffff';
+    }
+
     document.body.appendChild(particle);
     particle.addEventListener('animationend', () => particle.remove());
 }
