@@ -52,6 +52,7 @@ export function mergePortfolioRow(raw: Record<string, unknown> | null): Portfoli
           ogImageUrl: d.siteMeta.ogImageUrl ?? defaultData.siteMeta.ogImageUrl,
           twitterSite:
             d.siteMeta.twitterSite ?? defaultData.siteMeta.twitterSite,
+          faviconUrl: d.siteMeta.faviconUrl ?? defaultData.siteMeta.faviconUrl,
         }
       : defaultData.siteMeta,
     notes: Array.isArray(d.notes) ? d.notes : defaultData.notes,

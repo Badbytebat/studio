@@ -241,6 +241,7 @@ export const defaultData: PortfolioData = {
       "Personal portfolio — data science, analytics, and projects.",
     ogImageUrl: undefined,
     twitterSite: undefined,
+    faviconUrl: undefined,
   },
   notes: [],
   downloadableAssets: [],

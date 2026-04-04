@@ -255,7 +255,25 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({
         document.body.appendChild(mainCursor);
     }
     
-  }, [style, darkMode, isInteractive, cursorText, color])
+  }, [style, darkMode, isInteractive]);
+
+  // Keep label text / glow in sync without tearing down #main-cursor (avoids matrix trail / RAF glitches).
+  useEffect(() => {
+    if (style === 'none') return;
+    const el = document.getElementById('main-cursor');
+    if (!el?.classList.contains('cursor-text-label')) return;
+
+    if (style === 'matrix' && isInteractive) {
+      el.textContent = cursorText || '·';
+      el.style.setProperty('--cursor-glow-color', color);
+      return;
+    }
+
+    if (style === 'text' && isInteractive && cursorText) {
+      el.textContent = cursorText;
+      el.style.setProperty('--cursor-glow-color', color);
+    }
+  }, [cursorText, color, style, isInteractive]);
 
   return null;
 };

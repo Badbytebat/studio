@@ -77,6 +77,7 @@ export default function HomePage() {
   const [isMusicUploading, setIsMusicUploading] = React.useState(false);
   const [bgMusicPlaying, setBgMusicPlaying] = React.useState(false);
   const [isAboutPhotoUploading, setIsAboutPhotoUploading] = React.useState(false);
+  const [isFaviconUploading, setIsFaviconUploading] = React.useState(false);
   const [cursorText, setCursorText] = React.useState('');
   const [cursorColor, setCursorColor] = React.useState(CURSOR_COLORS[0]);
   const [cursorStyle, setCursorStyle] = React.useState<CursorStyle>('matrix');
@@ -88,6 +89,7 @@ export default function HomePage() {
   const { toast } = useToast();
   const wordIndexRef = React.useRef(0);
   const colorIndexRef = React.useRef(0);
+  const lastInteractiveRootRef = React.useRef<HTMLElement | null>(null);
   const isMobile = useIsMobile();
   const reduceMotion = useReducedMotion();
   const importInputRef = React.useRef<HTMLInputElement>(null);
@@ -147,43 +149,56 @@ export default function HomePage() {
     }
   }, [initialDataLoading, authLoading, user]);
 
-  // Handle custom cursor visibility based on edit mode and style
+  // Matrix / text cursor: shuffle label only when entering a new interactive root (avoids spam + remount glitches).
   React.useEffect(() => {
-    const isInteractive = (element: HTMLElement | null): boolean => {
-      if (!element) return false;
-      const clickableTags = ['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'];
-      const isClickable = clickableTags.includes(element.tagName) || (element.onclick !== null) || (element.style.cursor === 'pointer');
-      return isClickable || isInteractive(element.parentElement);
+    const findInteractiveRoot = (element: HTMLElement | null): HTMLElement | null => {
+      let el: HTMLElement | null = element;
+      while (el) {
+        const clickableTags = ['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'];
+        const isClickable =
+          clickableTags.includes(el.tagName) ||
+          el.onclick !== null ||
+          el.style.cursor === 'pointer';
+        if (isClickable) return el;
+        el = el.parentElement;
+      }
+      return null;
     };
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (isInteractive(target)) {
+      const root = findInteractiveRoot(target);
+      if (root) {
+        if (lastInteractiveRootRef.current === root) return;
+        lastInteractiveRootRef.current = root;
         wordIndexRef.current = (wordIndexRef.current + 1) % SELECTION_WORDS.length;
         setCursorText(SELECTION_WORDS[wordIndexRef.current]);
-
         colorIndexRef.current = (colorIndexRef.current + 1) % CURSOR_COLORS.length;
         setCursorColor(CURSOR_COLORS[colorIndexRef.current]);
       } else {
+        if (lastInteractiveRootRef.current === null) return;
+        lastInteractiveRootRef.current = null;
         setCursorText('');
       }
     };
-    
-    const handleMouseOut = () => {
-        setCursorText('');
+
+    const handleLeaveDocument = (e: MouseEvent) => {
+      const rt = e.relatedTarget as Node | null;
+      if (rt && document.documentElement.contains(rt)) return;
+      lastInteractiveRootRef.current = null;
+      setCursorText('');
     };
 
-    // Keep listeners in edit mode too — otherwise matrix/text cursors get no cursorText on hovers and disappear on buttons/inputs
     if (cursorStyle !== 'none') {
       window.addEventListener('mouseover', handleMouseOver);
-      window.addEventListener('mouseout', handleMouseOut);
+      document.documentElement.addEventListener('mouseout', handleLeaveDocument);
     }
 
     return () => {
-      window.removeEventListener("mouseover", handleMouseOver);
-      window.removeEventListener("mouseout", handleMouseOut);
+      window.removeEventListener('mouseover', handleMouseOver);
+      document.documentElement.removeEventListener('mouseout', handleLeaveDocument);
     };
-  }, [editMode, darkMode, cursorStyle]);
+  }, [cursorStyle]);
 
 
   const debouncedSave = useDebouncedCallback(async (newData: Partial<PortfolioData>) => {
@@ -512,6 +527,45 @@ export default function HomePage() {
     }
   };
 
+  const handleFaviconUpload = async (file: File) => {
+    if (!editMode || !user) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Error',
+        description: 'You must be logged in to upload a favicon.',
+      });
+      return;
+    }
+    if (isFaviconUploading) return;
+    const ok =
+      file.type.startsWith('image/') ||
+      /\.(ico|png|jpe?g|webp|svg)$/i.test(file.name);
+    if (!ok) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid file',
+        description: 'Use a PNG, JPG, WebP, SVG, or ICO image.',
+      });
+      return;
+    }
+    setIsFaviconUploading(true);
+    const { id: toastId, update } = toast({ description: 'Uploading favicon...' });
+    try {
+      const safeName = file.name.replace(/[^\w.\-]+/g, '_');
+      const filePath = `favicons/${user.id}/${Date.now()}-${safeName}`;
+      const url = await uploadFile(file, filePath);
+      const nextMeta = { ...dataRef.current.siteMeta, faviconUrl: url };
+      await savePortfolioData({ siteMeta: nextMeta });
+      setData((prev) => ({ ...prev, siteMeta: nextMeta }));
+      update({ id: toastId, title: 'Success!', description: 'Tab icon updated.' });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Upload failed.';
+      update({ id: toastId, variant: 'destructive', title: 'Upload Failed', description: message });
+    } finally {
+      setIsFaviconUploading(false);
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isSupabaseConfigured) return;
@@ -792,7 +846,12 @@ export default function HomePage() {
                     darkMode={darkMode}
                 />
                 {editChrome && (
-                  <SiteMetaSection siteMeta={data.siteMeta} onChange={handleSiteMetaUpdate} />
+                  <SiteMetaSection
+                    siteMeta={data.siteMeta}
+                    onChange={handleSiteMetaUpdate}
+                    onFaviconUpload={handleFaviconUpload}
+                    faviconUploading={isFaviconUploading}
+                  />
                 )}
               </main>
               <Footer />

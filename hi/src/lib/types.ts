@@ -75,6 +75,8 @@ export interface SiteMeta {
   /** Absolute or site-relative image URL for Open Graph / Twitter cards. */
   ogImageUrl?: string;
   twitterSite?: string;
+  /** Tab icon — PNG / ICO / SVG / WebP URL (e.g. from upload). */
+  faviconUrl?: string;
 }
 
 /** Short blog-style note (MDX-free; plain text / markdown-friendly body). */

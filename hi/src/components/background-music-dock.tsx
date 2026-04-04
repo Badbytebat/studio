@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { Volume2, VolumeX, Play, Pause } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -62,8 +62,12 @@ export default function BackgroundMusicDock({ tracks, onPlayingChange }: Props) 
     if (!el || !src) return;
     el.pause();
     setPlaying(false);
+    if (/^https?:\/\//i.test(src)) {
+      el.crossOrigin = "anonymous";
+    } else {
+      el.removeAttribute("crossOrigin");
+    }
     el.src = src;
-    el.muted = muted;
     el.loop = true;
   }, [src]);
 
@@ -95,14 +99,11 @@ export default function BackgroundMusicDock({ tracks, onPlayingChange }: Props) 
   const togglePlay = () => {
     const el = audioRef.current;
     if (!el || !src) return;
-    if (playing) {
+    if (!el.paused) {
       el.pause();
-      setPlaying(false);
       return;
     }
-    el.play()
-      .then(() => setPlaying(true))
-      .catch(() => setPlaying(false));
+    void el.play().catch(() => setPlaying(false));
   };
 
   const toggleMute = () => {
@@ -133,28 +134,45 @@ export default function BackgroundMusicDock({ tracks, onPlayingChange }: Props) 
   const ui = (
     <div
       className={cn(
-        "fixed bottom-6 left-1/2 z-[90] flex -translate-x-1/2 items-center gap-1 rounded-full border border-border/80 bg-background/85 px-2 py-1.5 shadow-lg backdrop-blur-md sm:gap-2 sm:px-3",
-        "max-w-[min(100vw-1rem,28rem)]"
+        "pointer-events-auto fixed bottom-6 left-1/2 z-[115] flex -translate-x-1/2 items-center gap-1.5 rounded-2xl border border-primary/25 bg-gradient-to-br from-card/95 via-background/90 to-card/95 px-2 py-2 shadow-[0_8px_32px_-8px_hsl(var(--primary)/0.35),0_0_0_1px_hsl(var(--accent)/0.12)] backdrop-blur-xl sm:gap-2 sm:px-3",
+        "max-w-[min(100vw-1rem,28rem)]",
+        playing && "ring-1 ring-accent/40"
       )}
       role="region"
       aria-label="Background music"
     >
-      <audio ref={audioRef} preload="metadata" loop playsInline className="hidden" />
+      <audio
+        key={src}
+        ref={audioRef}
+        preload="metadata"
+        loop
+        playsInline
+        className="hidden"
+      />
+      <div
+        className={cn(
+          "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary",
+          playing && "animate-pulse shadow-[0_0_16px_hsl(var(--accent)/0.45)]"
+        )}
+        aria-hidden
+      >
+        <Music className="h-4 w-4" />
+      </div>
       <Button
         type="button"
         size="icon"
         variant="ghost"
-        className="h-9 w-9 shrink-0"
+        className="h-9 w-9 shrink-0 rounded-xl hover:bg-primary/10"
         onClick={togglePlay}
         aria-label={playing ? "Pause music" : "Play music"}
       >
-        {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
       </Button>
       <Button
         type="button"
         size="icon"
         variant="ghost"
-        className="h-9 w-9 shrink-0"
+        className="h-9 w-9 shrink-0 rounded-xl hover:bg-primary/10"
         onClick={toggleMute}
         aria-label={muted ? "Unmute" : "Mute"}
       >
@@ -162,10 +180,10 @@ export default function BackgroundMusicDock({ tracks, onPlayingChange }: Props) 
       </Button>
       {tracks.length > 1 ? (
         <Select value={String(activeId)} onValueChange={onTrackChange}>
-          <SelectTrigger className="h-9 min-w-0 flex-1 border-0 bg-transparent text-xs sm:text-sm">
+          <SelectTrigger className="h-9 min-w-0 flex-1 rounded-xl border-border/60 bg-muted/30 text-xs sm:text-sm">
             <SelectValue placeholder="Track" />
           </SelectTrigger>
-          <SelectContent className="z-[110]">
+          <SelectContent className="z-[130]">
             {tracks.map((t) => (
               <SelectItem key={t.id} value={String(t.id)}>
                 {t.label}
@@ -174,7 +192,7 @@ export default function BackgroundMusicDock({ tracks, onPlayingChange }: Props) 
           </SelectContent>
         </Select>
       ) : (
-        <span className="truncate px-1 text-xs text-muted-foreground sm:text-sm">{active?.label}</span>
+        <span className="truncate px-1 text-xs font-medium text-foreground/90 sm:text-sm">{active?.label}</span>
       )}
     </div>
   );

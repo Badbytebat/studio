@@ -45,6 +45,22 @@ export default function SiteMetadata({ siteMeta, canonicalUrl }: Props) {
       }
       link.href = canonicalUrl.trim();
     }
+
+    const fav = siteMeta.faviconUrl?.trim();
+    const favLinkSel = 'link[rel="icon"][data-portfolio-favicon="1"]';
+    const existingFav = document.querySelector(favLinkSel) as HTMLLinkElement | null;
+    if (fav) {
+      let link = existingFav;
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = "icon";
+        link.setAttribute("data-portfolio-favicon", "1");
+        document.head.appendChild(link);
+      }
+      link.href = fav;
+    } else if (existingFav) {
+      existingFav.remove();
+    }
   }, [siteMeta, canonicalUrl]);
 
   return null;
