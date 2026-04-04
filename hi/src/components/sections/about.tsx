@@ -98,13 +98,13 @@ const AboutSection: React.FC<Props> = ({
                         ? "shadow-2xl shadow-accent/20 border-2 border-accent/50 animate-pulse-glow" 
                         : "shadow-xl"
                     )}>
-                      <Image 
+                      <Image
                           src={safeImageUrl(data.imageUrl)}
                           alt="Profile Picture"
                           data-ai-hint="person portrait"
-                          layout="fill"
-                          objectFit="cover"
-                          className="transition-transform duration-500 group-hover:scale-105"
+                          fill
+                          sizes="(max-width: 768px) min(100vw, 320px), (max-width: 1152px) 33vw, 300px"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                        {editMode && (
                         <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2">
