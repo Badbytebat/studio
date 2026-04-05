@@ -61,11 +61,12 @@ html.custom-cursor-active, html.custom-cursor-active * {
     pointer-events: none;
     z-index: 9999;
     user-select: none;
-    font-family: 'Space Grotesk', monospace;
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, 'Segoe UI', 'Noto Sans', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Apple Color Emoji', monospace;
 }
 
-/* MATRIX CURSOR TRAIL */
+/* MATRIX CURSOR TRAIL — Noto* fallbacks help polyglot glyphs render. */
 .matrix-cursor-particle {
+  font-family: 'Space Grotesk', 'Noto Sans', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans Arabic', 'Noto Sans Hebrew', 'Noto Sans Devanagari', 'Noto Sans Thai', 'Noto Sans Myanmar', ui-sans-serif, system-ui, sans-serif;
   font-size: 1.5rem;
   animation: matrix-fade 800ms linear forwards;
 }

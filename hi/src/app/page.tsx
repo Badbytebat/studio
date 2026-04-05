@@ -53,13 +53,17 @@ import FloatingCursorSelector from '@/components/floating-cursor-selector';
 import { PortfolioStarrySky } from '@/components/portfolio-starry-sky';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { closestMatrixCta } from '@/lib/matrix-cursor-cta';
+import { randomMatrixRainChar } from '@/lib/matrix-rain-charset';
 
 export type CursorStyle = 'matrix' | 'text' | 'orb' | 'ghost' | 'jello' | 'underline' | 'ink_bloom' | 'aurora' | 'circuit_pulse' | 'starlight' | 'none';
 
 
 const SELECTION_WORDS = [
   "Select", "Elegir", "Choisir", "Wählen", "選択", "선택", "选择", "Выбрать", "Selezionare", "Kies",
-  "ചुनें", "تحديد", "בחירה", "Valitse", "Velg", "Vælg", "Selecione", "Seç", "เลือก", "kies", "zgjidhni", "ይምረጡ", "يختار", "ընտրել", "চয়ন কৰা", "seçin", "নির্বাচন করুন", "izaberite", "изберете", "seleccionar", "选择", "選擇", "izabrati", "vybrat", "vælge", "selecteren", "select", "vali", "valita", "sélectionner", "აირჩიე", "auswählen", "επιλέγω", "પસંદ કરો", "chwazi", "בחר", "चयन करें", "kiválaszt", "velja", "pilih", "selezionare", "選択する", "ಆಯ್ಕೆಮಾಡಿ", "таңдаңыз", "선택하다", "izvēlēties", "pasirinkti", "избери", "pilih", "agħżel", "निवडा", "сонгох", "चयन गर्नुहोस्", "velge", "انتخاب کنید", "wybierz", "selecionar", "ਚੁਣੋ", "selectați", "выбрать", "изаберите", "vybrať", "izberite", "seleccionar", "chagua", "välj", "தேர்வு செய்யவும்", "ఎంచుకోండి", "seçmek", "вибрати", "منتخب کریں", "chọn", "dewiswch"
+  "ചुनें", "تحديد", "בחירה", "Valitse", "Velg", "Vælg", "Selecione", "Seç", "เลือก", "kies", "zgjidhni", "ይምረጡ", "يختار", "ընտրել", "চয়ন কৰা", "seçin", "নির্বাচন করুন", "izaberite", "изберете", "seleccionar", "選擇", "izabrati", "vybrat", "vælge", "selecteren", "vali", "valita", "sélectionner", "აირჩიე", "auswählen", "επιλέγω", "પસંદ કરો", "chwazi", "בחר", "चयन करें", "kiválaszt", "velja", "pilih", "選択する", "ಆಯ್ಕೆಮಾಡಿ", "таңдаңыз", "선택하다", "izvēlēties", "pasirinkti", "избери", "agħżel", "निवडा", "сонгох", "चयन गर्नुहोस्", "velge", "انتخاب کنید", "wybierz", "selecionar", "ਚੁਣੋ", "selectați", "выбрать", "изаберите", "vybrať", "izberite", "chagua", "välj", "தேர்வு செய்யவும்", "ఎంచుకోండి", "seçmek", "вибрати", "منتخب کریں", "chọn", "dewiswch",
+  "Chagua", "Pumili", "Koho", "Tīpako", "Roghnaigh", "Dewis", "Veldu", "Trieu", "Escolle", "Aukeratu",
+  "Valige", "Pasirinkite", "Atlasiet", "Izvēlieties", "Tanlang", "Tanlash", "Saylaň", "छान्नुहोस्", "තෝරන්න",
+  "ရွေးချယ်ပါ", "ជ្រើសរើស", "ເລືອກ", "Piliin", "Pumili ng", "Memilih", "Zgjidhni", "Kgetha", "Triar", "Filtreu",
 ];
 
 const CURSOR_COLORS = [
@@ -160,7 +164,15 @@ export default function HomePage() {
         if (lastInteractiveRootRef.current === root) return;
         lastInteractiveRootRef.current = root;
         wordIndexRef.current = (wordIndexRef.current + 1) % SELECTION_WORDS.length;
-        setCursorText(SELECTION_WORDS[wordIndexRef.current]);
+        const polyglotLabel =
+          cursorStyle === 'matrix' || cursorStyle === 'text'
+            ? Math.random() < 0.55
+            : false;
+        if (polyglotLabel) {
+          setCursorText(randomMatrixRainChar());
+        } else {
+          setCursorText(SELECTION_WORDS[wordIndexRef.current]);
+        }
         colorIndexRef.current = (colorIndexRef.current + 1) % CURSOR_COLORS.length;
         setCursorColor(CURSOR_COLORS[colorIndexRef.current]);
       } else {

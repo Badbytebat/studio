@@ -4,6 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { CursorStyle } from '@/app/page';
 import { closestMatrixCta } from '@/lib/matrix-cursor-cta';
+import { randomMatrixRainChar } from '@/lib/matrix-rain-charset';
 
 /** Avoid removeChild errors when React portals and cursor cleanup overlap. */
 function safeDetach(el: Element) {
@@ -338,7 +339,6 @@ const MatrixCursor: React.FC<MatrixCursorProps> = ({
   return null;
 };
 
-const CHARS = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
 const matrixColors = [
     'hsl(260, 60%, 65%)', 'hsl(var(--accent))', '#ff6b6b', '#feca57', 
     'hsl(var(--primary))', '#48dbfb'
@@ -349,7 +349,7 @@ const createMatrixParticle = (x: number, y: number) => {
     if (x === 0 && y === 0) return;
     const particle = document.createElement('span');
     particle.className = 'matrix-cursor-particle';
-    particle.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+    particle.textContent = randomMatrixRainChar();
     
     const color = matrixColors[matrixColorIndex];
     particle.style.color = color;
