@@ -98,6 +98,16 @@ export default function HomePage() {
   const lastInteractiveRootRef = React.useRef<HTMLElement | null>(null);
   const isMobile = useIsMobile();
   const reduceMotion = useReducedMotion();
+
+  /** Login + day: matrix/text adds both rain + light ring — use Inverted (orb) so only one cursor shows. */
+  const cursorStyleForDisplay = React.useMemo((): CursorStyle => {
+    const loginLight = showLogin && !user && !darkMode;
+    if (loginLight && (cursorStyle === 'matrix' || cursorStyle === 'text')) {
+      return 'orb';
+    }
+    return cursorStyle;
+  }, [showLogin, user, darkMode, cursorStyle]);
+
   const importInputRef = React.useRef<HTMLInputElement>(null);
   const resumeToolbarInputRef = React.useRef<HTMLInputElement>(null);
   const dataRef = React.useRef(data);
@@ -165,7 +175,7 @@ export default function HomePage() {
         lastInteractiveRootRef.current = root;
         wordIndexRef.current = (wordIndexRef.current + 1) % SELECTION_WORDS.length;
         const polyglotLabel =
-          cursorStyle === 'matrix' || cursorStyle === 'text'
+          cursorStyleForDisplay === 'matrix' || cursorStyleForDisplay === 'text'
             ? Math.random() < 0.55
             : false;
         if (polyglotLabel) {
@@ -189,7 +199,7 @@ export default function HomePage() {
       setCursorText('');
     };
 
-    if (cursorStyle !== 'none') {
+    if (cursorStyleForDisplay !== 'none') {
       window.addEventListener('mouseover', handleMouseOver);
       document.documentElement.addEventListener('mouseout', handleLeaveDocument);
     }
@@ -198,7 +208,7 @@ export default function HomePage() {
       window.removeEventListener('mouseover', handleMouseOver);
       document.documentElement.removeEventListener('mouseout', handleLeaveDocument);
     };
-  }, [cursorStyle]);
+  }, [cursorStyleForDisplay]);
 
 
   const debouncedSave = useDebouncedCallback(async (newData: Partial<PortfolioData>) => {
@@ -675,7 +685,7 @@ export default function HomePage() {
           darkMode={darkMode} 
           cursorText={cursorText} 
           color={cursorColor} 
-          style={cursorStyle}
+          style={cursorStyleForDisplay}
           reduceMotion={reduceMotion}
         />
       <AnimatePresence mode="wait">
